@@ -1,5 +1,5 @@
 {
-  "name": "mempool-startos",
+  "name": "mempool-pruned-startos",
   "scripts": {
     "build": "rm -rf ./javascript && ncc build startos/index.ts -o ./javascript",
     "prettier": "prettier --write startos",
@@ -10,7 +10,8 @@
     "bitcoin-core-startos": "github:Start9Labs/bitcoin-core-startos#next/28.x",
     "cln-startos": "github:Start9Labs/cln-startos#next",
     "lnd-startos": "github:Start9Labs/lnd-startos#next",
-    "tor-startos": "github:Start9Labs/tor-startos#next"
+    "tor-startos": "github:Start9Labs/tor-startos#next",
+    "knots-blake2b-startos": "github:paulscode/knots-blake2b-startos#main"
   },
   "devDependencies": {
     "@types/node": "^22.1.0",

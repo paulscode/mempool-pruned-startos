@@ -1,4 +1,5 @@
 import { FileHelper, z } from '@start9labs/start-sdk'
+import { BackendId, backendIds, defaultBackend } from '../backends'
 import { sdk } from '../sdk'
 
 // StartOS-level state, kept out of the upstream mempool-config.json: the user's
@@ -9,7 +10,18 @@ import { sdk } from '../sdk'
 // init/watchTorProxy. Keeping intent here is what lets the proxy be switched off
 // when tor is uninstalled without forgetting that the user asked for it.
 const shape = z.object({
-  indexer: z.enum(['electrs', 'fulcrum']).optional().catch(undefined),
+  /**
+   * Which bitcoind flavor to run against. `.catch()` rather than `.optional()`
+   * so an absent or unreadable store still yields a resolvable backend, the same
+   * shape `electrs-pruned` uses.
+   */
+  backend: z
+    .enum(backendIds as [BackendId, ...BackendId[]])
+    .catch(defaultBackend),
+  indexer: z
+    .enum(['electrs', 'electrs-pruned', 'fulcrum'])
+    .optional()
+    .catch(undefined),
   torProxy: z.boolean().catch(false),
 })
 

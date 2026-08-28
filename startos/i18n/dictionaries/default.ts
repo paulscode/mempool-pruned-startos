@@ -69,6 +69,11 @@ const dict = {
   "Route Mempool's outbound internet requests through Tor. Useful where an ISP or national firewall blocks the endpoints Mempool reads from, and where the server's own name resolution is unreliable — a SOCKS proxy resolves hostnames at the proxy rather than locally.": 70,
   'This requires the Tor service to be installed and running.': 71,
   'This server could not resolve an external hostname. Mempool is otherwise unaffected — Bitcoin, the Electrum indexer, and the database are reached by address — but fiat exchange rates will be unavailable. Set explicit DNS servers under System > DNS on your server, and check any VPN or StartTunnel gateway you have configured: a gateway supplies its own resolver, which stops working whenever the tunnel does.': 72,
+  'Select Node': 73,
+  'Which Bitcoin service this explorer reads blocks and transactions from.': 74,
+  'Choose which Bitcoin service backs this explorer': 75,
+  'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.': 76,
+  'Electrs Pruned (works with a pruned node)': 77,
 } as const
 
 export type I18nKey = keyof typeof dict

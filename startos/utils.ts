@@ -1,8 +1,8 @@
 import { T, utils } from '@start9labs/start-sdk'
 import { totalmem } from 'os'
-import { rpcHostId, rpcPort } from 'bitcoin-core-startos/startos/utils'
 import { controlHostId, restPort } from 'lnd-startos/startos/interfaces'
 import { socksHostId, socksPort } from 'tor-startos/startos/utils'
+import { backends, defaultBackend } from './backends'
 import { storeJson } from './file-models/store.json'
 import { sdk } from './sdk'
 
@@ -63,15 +63,25 @@ export const poolsTreeUrl = `http://127.0.0.1:${poolsPort}/tree`
  * caller then omits `CORE_RPC` rather than writing a fake address; the
  * `.const()` heals with the real address when bitcoind reappears.
  */
-export const bitcoindRpcBridge = (effects: T.Effects) =>
-  sdk.host
+export const bitcoindRpcBridge = async (effects: T.Effects) => {
+  // Which flavor, and therefore which host id and port, is the user's choice.
+  // The official package and its two mainnet forks share both, because the forks
+  // change only their host-side preferred ports; knots-blake2b is a separate
+  // lineage and does not, which is why this reads the endpoints from `backends`
+  // rather than importing one set of constants.
+  const backend =
+    (await storeJson.read((s) => s?.backend).const(effects)) ?? defaultBackend
+  const { rpcHostId: hostId, rpcPort: internalPort } =
+    backends[backend].endpoints
+  return sdk.host
     .getBridgeAddress(effects, {
-      packageId: 'bitcoind',
-      hostId: rpcHostId,
-      internalPort: rpcPort,
+      packageId: backend,
+      hostId,
+      internalPort,
       ssl: false,
     })
     .const()
+}
 
 /**
  * LND's REST bridge address (`<osIp>:8080`), the base for `LND.REST_API_URL`.
@@ -104,7 +114,7 @@ export const torSocksBridge = (effects: T.Effects) =>
     })
     .const()
 
-export type Indexer = 'electrs' | 'fulcrum'
+export type Indexer = 'electrs' | 'electrs-pruned' | 'fulcrum'
 
 // electrs and fulcrum are optional dependencies Mempool does not depend on at
 // the npm level, so their host ids are string literals rather than imported
@@ -112,6 +122,9 @@ export type Indexer = 'electrs' | 'fulcrum'
 // under host `electrum`, fulcrum under host `main`.
 const INDEXER_HOSTS: Record<Indexer, { packageId: string; hostId: string }> = {
   electrs: { packageId: 'electrs', hostId: 'electrum' },
+  // A fork of the electrs package, so the same host id, and the only indexer
+  // here that can serve a pruned node.
+  'electrs-pruned': { packageId: 'electrs-pruned', hostId: 'electrum' },
   fulcrum: { packageId: 'fulcrum', hostId: 'main' },
 }
 const electrumPort = 50001

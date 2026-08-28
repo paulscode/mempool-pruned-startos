@@ -11,6 +11,7 @@ const indexerInputSpec = InputSpec.of({
     values: {
       fulcrum: i18n('Fulcrum (recommended)'),
       electrs: i18n('Electrs'),
+      'electrs-pruned': i18n('Electrs Pruned (works with a pruned node)'),
     },
     default: 'fulcrum',
   }),

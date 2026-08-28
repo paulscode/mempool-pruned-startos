@@ -11,10 +11,10 @@ import {
 } from './i18n'
 
 export const manifest = setupManifest({
-  id: 'mempool',
-  title: 'Mempool',
+  id: 'mempool-pruned',
+  title: 'Mempool Pruned',
   license: 'AGPL',
-  packageRepo: 'https://github.com/Start9Labs/mempool-startos',
+  packageRepo: 'https://github.com/paulscode/mempool-pruned-startos',
   upstreamRepo: 'https://github.com/mempool/mempool',
   marketingUrl: 'https://mempool.space',
   donationUrl: 'https://mempool.space/sponsor',
@@ -23,13 +23,13 @@ export const manifest = setupManifest({
   images: {
     frontend: {
       source: {
-        dockerTag: 'mempool/frontend:v3.3.1',
+        dockerTag: 'ghcr.io/paulscode/mempool-pruned-frontend:v3.3.1-pruned.1',
       },
       arch: ['x86_64', 'aarch64'],
     },
     backend: {
       source: {
-        dockerTag: 'mempool/backend:v3.3.1',
+        dockerTag: 'ghcr.io/paulscode/mempool-pruned-backend:v3.3.1-pruned.1',
       },
       arch: ['x86_64', 'aarch64'],
     },
@@ -41,12 +41,39 @@ export const manifest = setupManifest({
     },
   },
   dependencies: {
+    // Every flavor is optional here and exactly one is returned as required
+    // from dependencies.ts, chosen by the user. Declaring bitcoind mandatory
+    // would demand the official package of someone running a companion node.
     bitcoind: {
       description: bitcoindDescription,
-      optional: false,
+      optional: true,
       metadata: {
         title: 'Bitcoin',
         icon: 'https://raw.githubusercontent.com/Start9Labs/bitcoin-core-startos/refs/heads/30.x/dep-icon.svg',
+      },
+    },
+    'knots-prerdts': {
+      description: bitcoindDescription,
+      optional: true,
+      metadata: {
+        title: 'Bitcoin Knots (pre-RDTS) Companion',
+        icon: 'https://raw.githubusercontent.com/paulscode/knots-prerdts-startos/main/dep-icon.png',
+      },
+    },
+    'knots-rdts': {
+      description: bitcoindDescription,
+      optional: true,
+      metadata: {
+        title: 'Bitcoin Knots (RDTS) Companion',
+        icon: 'https://raw.githubusercontent.com/paulscode/knots-rdts-startos/main/dep-icon.png',
+      },
+    },
+    'knots-blake2b': {
+      description: bitcoindDescription,
+      optional: true,
+      metadata: {
+        title: 'Bitcoin Knots BLAKE2b',
+        icon: 'https://raw.githubusercontent.com/paulscode/knots-blake2b-startos/main/dep-icon.png',
       },
     },
     electrs: {
@@ -55,6 +82,14 @@ export const manifest = setupManifest({
       metadata: {
         title: 'Electrs',
         icon: 'https://raw.githubusercontent.com/Start9Labs/electrs-startos/refs/heads/master/icon.svg',
+      },
+    },
+    'electrs-pruned': {
+      description: electrsDescription,
+      optional: true,
+      metadata: {
+        title: 'Electrs Pruned',
+        icon: 'https://raw.githubusercontent.com/paulscode/electrs-pruned-startos/master/dep-icon.png',
       },
     },
     fulcrum: {
