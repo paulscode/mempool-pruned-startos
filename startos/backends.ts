@@ -73,13 +73,13 @@ export const backends = {
     endpoints: officialEndpoints,
     healthChecks: officialHealthChecks,
   },
+  // `knots-rdts` was here and is not any more. RDTS no longer has a chain of
+  // its own: Knots rc4 removed the versionbits deployment and activates those
+  // rules at the BLAKE2b fork height instead, so the RDTS variant and the
+  // BLAKE2b one stopped being two things to choose between. The package still
+  // exists; this explorer just has no reason to offer it.
   'knots-prerdts': {
     title: 'Bitcoin Knots (pre-RDTS) Companion',
-    endpoints: officialEndpoints,
-    healthChecks: officialHealthChecks,
-  },
-  'knots-rdts': {
-    title: 'Bitcoin Knots (RDTS) Companion',
     endpoints: officialEndpoints,
     healthChecks: officialHealthChecks,
   },
@@ -108,6 +108,5 @@ export const versionRange: Record<BackendId, string> = {
   bitcoind:
     '(>=28.4:17 && <29) || (>=29.4:4 && <30) || (>=30.3:4 && <31) || >=31.1:4',
   'knots-prerdts': '>=29.3:25',
-  'knots-rdts': '>=29.4:8',
   'knots-blake2b': '>=1.0.0:17',
 }

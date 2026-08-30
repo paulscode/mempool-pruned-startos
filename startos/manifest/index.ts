@@ -60,14 +60,6 @@ export const manifest = setupManifest({
         icon: 'https://raw.githubusercontent.com/paulscode/knots-prerdts-startos/main/dep-icon.png',
       },
     },
-    'knots-rdts': {
-      description: bitcoindDescription,
-      optional: true,
-      metadata: {
-        title: 'Bitcoin Knots (RDTS) Companion',
-        icon: 'https://raw.githubusercontent.com/paulscode/knots-rdts-startos/main/dep-icon.png',
-      },
-    },
     'knots-blake2b': {
       description: bitcoindDescription,
       optional: true,
