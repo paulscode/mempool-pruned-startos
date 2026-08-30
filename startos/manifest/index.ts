@@ -64,7 +64,7 @@ export const manifest = setupManifest({
       description: bitcoindDescription,
       optional: true,
       metadata: {
-        title: 'Bitcoin Knots BLAKE2b',
+        title: 'Bitcoin Knots (BLAKE2b) Companion',
         icon: 'https://raw.githubusercontent.com/paulscode/knots-blake2b-startos/main/dep-icon.png',
       },
     },

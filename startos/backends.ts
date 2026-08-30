@@ -84,7 +84,7 @@ export const backends = {
     healthChecks: officialHealthChecks,
   },
   'knots-blake2b': {
-    title: 'Bitcoin Knots BLAKE2b',
+    title: 'Bitcoin Knots (BLAKE2b) Companion',
     endpoints: {
       rpcHostId: b2bRpcHostId,
       rpcPort: b2bRpcPort,
