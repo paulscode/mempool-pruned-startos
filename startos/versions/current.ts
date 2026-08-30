@@ -5,7 +5,7 @@ import { sdk } from '../sdk'
 import { EXTERNAL_RETRY } from '../utils'
 
 export const current = VersionInfo.of({
-  version: '3.3.1:30',
+  version: '3.3.1:31',
   releaseNotes: {
     en_US: `Fixes indexing on the BLAKE2b chain. Blocks there carry a header that is longer than a normal Bitcoin one, and the database column holding it was sized for exactly the normal length, so the first block after the fork either failed to store or was stored cut in half. The column is widened on upgrade; nothing you have set changes, and no re-index is needed. This does not affect any other chain.
 

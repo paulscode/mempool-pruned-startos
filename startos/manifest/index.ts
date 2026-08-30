@@ -56,7 +56,7 @@ export const manifest = setupManifest({
       description: bitcoindDescription,
       optional: true,
       metadata: {
-        title: 'Bitcoin Knots (pre-RDTS) Companion',
+        title: 'Knots (pre-RDTS) Companion',
         icon: 'https://raw.githubusercontent.com/paulscode/knots-prerdts-startos/main/dep-icon.png',
       },
     },
