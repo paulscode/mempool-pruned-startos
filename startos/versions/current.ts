@@ -5,31 +5,31 @@ import { sdk } from '../sdk'
 import { EXTERNAL_RETRY } from '../utils'
 
 export const current = VersionInfo.of({
-  version: '3.3.1:28',
+  version: '3.3.1:29',
   releaseNotes: {
     en_US: `Fixes indexing on the BLAKE2b chain. Blocks there carry a header that is longer than a normal Bitcoin one, and the database column holding it was sized for exactly the normal length, so the first block after the fork either failed to store or was stored cut in half. The column is widened on upgrade; nothing you have set changes, and no re-index is needed. This does not affect any other chain.
 
-The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Bitcoin Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Bitcoin Knots (BLAKE2b) Companion.
+The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Knots (BLAKE2b) Companion.
 
 That is a change of chain, so clear the backend cache once after upgrading. The database is built against whichever chain it was indexing.`,
     es_ES: `Fixes indexing on the BLAKE2b chain. Blocks there carry a header that is longer than a normal Bitcoin one, and the database column holding it was sized for exactly the normal length, so the first block after the fork either failed to store or was stored cut in half. The column is widened on upgrade; nothing you have set changes, and no re-index is needed. This does not affect any other chain.
 
-The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Bitcoin Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Bitcoin Knots (BLAKE2b) Companion.
+The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Knots (BLAKE2b) Companion.
 
 That is a change of chain, so clear the backend cache once after upgrading. The database is built against whichever chain it was indexing.`,
     de_DE: `Fixes indexing on the BLAKE2b chain. Blocks there carry a header that is longer than a normal Bitcoin one, and the database column holding it was sized for exactly the normal length, so the first block after the fork either failed to store or was stored cut in half. The column is widened on upgrade; nothing you have set changes, and no re-index is needed. This does not affect any other chain.
 
-The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Bitcoin Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Bitcoin Knots (BLAKE2b) Companion.
+The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Knots (BLAKE2b) Companion.
 
 That is a change of chain, so clear the backend cache once after upgrading. The database is built against whichever chain it was indexing.`,
     pl_PL: `Fixes indexing on the BLAKE2b chain. Blocks there carry a header that is longer than a normal Bitcoin one, and the database column holding it was sized for exactly the normal length, so the first block after the fork either failed to store or was stored cut in half. The column is widened on upgrade; nothing you have set changes, and no re-index is needed. This does not affect any other chain.
 
-The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Bitcoin Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Bitcoin Knots (BLAKE2b) Companion.
+The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Knots (BLAKE2b) Companion.
 
 That is a change of chain, so clear the backend cache once after upgrading. The database is built against whichever chain it was indexing.`,
     fr_FR: `Fixes indexing on the BLAKE2b chain. Blocks there carry a header that is longer than a normal Bitcoin one, and the database column holding it was sized for exactly the normal length, so the first block after the fork either failed to store or was stored cut in half. The column is widened on upgrade; nothing you have set changes, and no re-index is needed. This does not affect any other chain.
 
-The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Bitcoin Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Bitcoin Knots (BLAKE2b) Companion.
+The Bitcoin Knots (RDTS) Companion has been removed from Select Node. It no longer has a chain of its own: the RDTS rules now take effect at the BLAKE2b fork rather than activating separately, so that option and Knots (BLAKE2b) Companion were two names for the same destination. If your explorer was pointed at it, it now points at Knots (BLAKE2b) Companion.
 
 That is a change of chain, so clear the backend cache once after upgrading. The database is built against whichever chain it was indexing.`,
   },
