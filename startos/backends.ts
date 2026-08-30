@@ -69,7 +69,11 @@ const officialEndpoints: Endpoints = {
  */
 export const backends = {
   bitcoind: {
-    title: 'Bitcoin Core',
+    // Named for Knots rather than Core, which is a deliberate departure from the
+    // packaging guide's "call a multi-flavor dependency Bitcoin". Both flavors
+    // share the `bitcoind` id, so this one entry is the only way to reach either,
+    // and nearly everyone running this stack runs Knots.
+    title: 'Bitcoin Knots',
     endpoints: officialEndpoints,
     healthChecks: officialHealthChecks,
   },
