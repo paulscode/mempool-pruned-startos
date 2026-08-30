@@ -69,7 +69,7 @@ const officialEndpoints: Endpoints = {
  */
 export const backends = {
   bitcoind: {
-    title: 'Bitcoin',
+    title: 'Bitcoin Core',
     endpoints: officialEndpoints,
     healthChecks: officialHealthChecks,
   },
