@@ -79,12 +79,12 @@ export const backends = {
   // BLAKE2b one stopped being two things to choose between. The package still
   // exists; this explorer just has no reason to offer it.
   'knots-prerdts': {
-    title: 'Knots (pre-RDTS) Companion',
+    title: 'Bitcoin Knots (pre-RDTS) Companion',
     endpoints: officialEndpoints,
     healthChecks: officialHealthChecks,
   },
   'knots-blake2b': {
-    title: 'Knots (BLAKE2b) Companion',
+    title: 'Bitcoin Knots (BLAKE2b) Companion',
     endpoints: {
       rpcHostId: b2bRpcHostId,
       rpcPort: b2bRpcPort,

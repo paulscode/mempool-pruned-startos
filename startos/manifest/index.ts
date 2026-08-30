@@ -56,7 +56,7 @@ export const manifest = setupManifest({
       description: bitcoindDescription,
       optional: true,
       metadata: {
-        title: 'Knots (pre-RDTS) Companion',
+        title: 'Bitcoin Knots (pre-RDTS) Companion',
         icon: 'https://raw.githubusercontent.com/paulscode/knots-prerdts-startos/main/dep-icon.png',
       },
     },
@@ -64,7 +64,7 @@ export const manifest = setupManifest({
       description: bitcoindDescription,
       optional: true,
       metadata: {
-        title: 'Knots (BLAKE2b) Companion',
+        title: 'Bitcoin Knots (BLAKE2b) Companion',
         icon: 'https://raw.githubusercontent.com/paulscode/knots-blake2b-startos/main/dep-icon.png',
       },
     },
