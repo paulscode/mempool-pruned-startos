@@ -73,9 +73,13 @@ const coreRpcSection = z.object({
   // absent until bitcoind resolves — no fake placeholder is written.
   HOST: z.string().optional().catch(undefined),
   PORT: z.number().catch(8332),
-  COOKIE_PATH: z
-    .literal(`${btcMountpoint}/.cookie`)
-    .catch(`${btcMountpoint}/.cookie`),
+  // Not a literal any more, because it is not one value. bitcoind nests a non-mainnet chain's
+  // data, its RPC cookie included, in a subdirectory named for that chain, so this is
+  // `<mount>/.cookie` on mainnet and `<mount>/regtest/.cookie` on regtest. Pinned to the mainnet
+  // form it authenticated on mainnet and nowhere else, which mattered because the BLAKE2b node
+  // offers regtest and that is what ASIC compatibility testing runs on. main.ts derives it from
+  // the node's own generated config on every start.
+  COOKIE_PATH: z.string().catch(`${btcMountpoint}/.cookie`),
   // configurable
   USERNAME: z.string().catch(''),
   PASSWORD: z.string().catch(''),

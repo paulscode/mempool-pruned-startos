@@ -4,7 +4,10 @@ import { manifest as bitcoinManifest } from 'bitcoin-core-startos/startos/manife
 import { manifest as clnManifest } from 'cln-startos/startos/manifest'
 import { manifest as lndManifest } from 'lnd-startos/startos/manifest'
 import { configJson } from './file-models/mempool-config.json'
+import { storeJson } from './file-models/store.json'
+import { defaultBackend } from './backends'
 import { i18n } from './i18n'
+import { FileHelper } from '@start9labs/start-sdk'
 import { sdk } from './sdk'
 import {
   apiPort,
@@ -51,6 +54,11 @@ export const main = sdk.setupMain(async ({ effects }) => {
 
   const config = await configJson.read().const(effects)
   if (!config) throw new Error('Config file not found')
+
+  // Which node the user chose. Read as a const so changing it restarts the backend, which it must:
+  // it changes both the address CORE_RPC points at and the volume mounted below.
+  const backend =
+    (await storeJson.read((s) => s?.backend).const(effects)) ?? defaultBackend
 
   // V8 old-space heap ceiling for the mempool backend, scaled to the RAM
   // StartOS grants service containers (host MemTotal less its own 1 GiB reserve).
@@ -136,7 +144,13 @@ export const main = sdk.setupMain(async ({ effects }) => {
       type: 'file',
     })
     .mountDependency<typeof bitcoinManifest>({
-      dependencyId: 'bitcoind',
+      // The selected backend, not a hardcoded `bitcoind`. All of them share a volume id and
+      // layout, so the mountpoint stays constant and only the source changes. Hardcoded, this
+      // mounted the official package's data directory while CORE_RPC pointed at whichever node
+      // the user actually chose, so the cookie read from here did not belong to the node being
+      // asked; and on a backend selected without `bitcoind` installed there was nothing here at
+      // all. electrs-pruned already resolves its mount the same way.
+      dependencyId: backend as 'bitcoind',
       volumeId: 'main',
       subpath: null,
       mountpoint: btcMountpoint,
@@ -179,6 +193,48 @@ export const main = sdk.setupMain(async ({ effects }) => {
     { imageId: 'backend' },
     backendMounts,
     'backend-api',
+  )
+
+  // Where the node keeps its RPC cookie, which depends on the chain it is on.
+  //
+  // bitcoind puts a non-mainnet chain's data in a subdirectory named for that chain and keeps
+  // mainnet's at the root, so a single pinned path authenticates on one chain only. Derived from
+  // the node's own generated config rather than from the backend id, because the BLAKE2b node can
+  // be on either and the id does not say which.
+  //
+  // Read reactively: the node rewrites this file on every start, so switching its chain restarts
+  // the backend here rather than leaving it authenticating against a path that no longer exists.
+  const backendRootfs = await backendSub.rootfs
+  const nodeConf = await FileHelper.string(
+    `${backendRootfs}${btcMountpoint}/bitcoin.conf`,
+  )
+    .read(
+      (c) => c,
+      (prev, next) => next === null || prev === next,
+    )
+    .const(effects)
+
+  // Mainnet is spelled by the absence of a chain line rather than by `mainnet=1`, so a search for
+  // a positive marker is the only correct shape here. Anything else concludes mainnet for every
+  // chain, which is exactly the path this is fixing.
+  const nodeChain =
+    (['regtest', 'testnet4', 'testnet', 'signet'] as const).find((c) =>
+      nodeConf?.split('\n').some((l) => l.trim() === `${c}=1`),
+    ) ?? null
+
+  await configJson.merge(
+    effects,
+    {
+      CORE_RPC: {
+        COOKIE_PATH: nodeChain
+          ? `${btcMountpoint}/${nodeChain}/.cookie`
+          : `${btcMountpoint}/.cookie`,
+      },
+    },
+    // The config was read as a const above, and this changes it. Permitted rather than restarting,
+    // because the value is derived from a source that is itself watched: a real chain change comes
+    // back through `nodeConf` above and restarts then, so a restart here would only be a loop.
+    { allowWriteAfterConst: true },
   )
 
   const frontendSub = sdk.SubContainer.of(
