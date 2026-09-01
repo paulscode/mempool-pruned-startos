@@ -29,7 +29,7 @@ export const manifest = setupManifest({
     },
     backend: {
       source: {
-        dockerTag: 'ghcr.io/paulscode/mempool-pruned-backend:v3.3.1-pruned.4',
+        dockerTag: 'ghcr.io/paulscode/mempool-pruned-backend:v3.3.1-pruned.5',
       },
       arch: ['x86_64', 'aarch64'],
     },
