@@ -7,7 +7,14 @@ const { InputSpec, Value } = sdk
 const indexerInputSpec = InputSpec.of({
   indexer: Value.select({
     name: i18n('Select Indexer'),
-    description: i18n('Select an Electrum server to use for address lookups'),
+    // Upstream's option set, but not upstream's cost. Upstream requires an
+    // archival node with txindex, so None there only loses address lookups.
+    // Here the node may be pruned, and BACKEND 'none' sends confirmed
+    // transaction lookups back to Bitcoin RPC, which is the exact call this
+    // package exists to avoid.
+    description: i18n(
+      'Select an Electrum server to use for address lookups. Against a pruned node this is not optional in practice: with None, confirmed transactions are looked up over Bitcoin RPC, which a pruned node cannot answer.',
+    ),
     values: {
       fulcrum: i18n('Fulcrum (recommended)'),
       electrs: i18n('Electrs'),

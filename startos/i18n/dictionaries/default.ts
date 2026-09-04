@@ -75,6 +75,7 @@ const dict = {
   'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.': 76,
   'Electrs Pruned (works with a pruned node)': 77,
   'None — address lookups disabled': 78,
+  'Select an Electrum server to use for address lookups. Against a pruned node this is not optional in practice: with None, confirmed transactions are looked up over Bitcoin RPC, which a pruned node cannot answer.': 79,
 } as const
 
 export type I18nKey = keyof typeof dict

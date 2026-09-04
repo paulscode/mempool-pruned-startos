@@ -162,6 +162,8 @@ Chooses which Electrum server backs address lookups — Fulcrum, Electrs, Electr
 - **Cost:** seconds, then a restart.
 - **Repeat safety:** idempotent; switching indexers loses nothing, since none of them stores Mempool's data. **None** turns address lookups off and drops the dependency.
 
+**None costs more here than it does upstream, and the difference is the point of this package.** Upstream requires an archival node with `txindex`, so `MEMPOOL.BACKEND: 'none'` there only loses address lookups. Here the node may be pruned, and `none` sends the backend down `BitcoinApi`, which resolves a confirmed transaction with `getrawtransaction` and no blockhash — the exact call the Electrum route exists to avoid. Against a pruned node, **None** is not a lighter configuration, it is a broken one. Against an archival node it behaves as upstream's does.
+
 ### Enable Lightning
 
 Selects the Lightning node whose network data fills the Lightning tab, or turns the tab off.

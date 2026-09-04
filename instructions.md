@@ -19,7 +19,7 @@ Mempool needs Bitcoin, an Electrum-style indexer, and (optionally) a Lightning n
 
 1. Install a **Bitcoin** node if you don't have one, then run **Select Node** and pick it. Unlike upstream Mempool, this one posts no task demanding `txindex` and no pruning: your node can stay pruned.
 2. Install an indexer: **Fulcrum**, **Electrs**, or **Electrs Pruned**. Against a pruned node, use **Electrs Pruned** — it is the only one of the three that can index blocks your node has already discarded.
-3. After installing Mempool, run the **Select Indexer** task that appears for Mempool and pick one, or pick **None**. Nothing is picked for you, and Mempool will not start until you answer.
+3. After installing Mempool, run the **Select Indexer** task that appears for Mempool and pick one, or pick **None**. Nothing is picked for you, and Mempool will not start until you answer. **Do not pick None if your node is pruned.** Without an indexer, Mempool looks confirmed transactions up over Bitcoin RPC instead, which a pruned node cannot answer, so transaction pages break as well as address search.
 4. Optionally install **LND** or **Core Lightning**, then run **Enable Lightning** and pick the backend you want feeding the Lightning tab.
 5. Start Mempool. It will wait until Bitcoin, the selected indexer, and (if enabled) the Lightning backend are healthy and synced.
 

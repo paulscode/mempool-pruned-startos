@@ -80,6 +80,7 @@ export default {
     76: 'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.',
     77: 'Electrs Pruned (works with a pruned node)',
     78: 'Ninguno — busquedas de direcciones desactivadas',
+    79: 'Seleccione un servidor Electrum para busquedas de direcciones. Frente a un nodo podado esto no es opcional en la practica: con Ninguno, las transacciones confirmadas se consultan por RPC de Bitcoin, algo que un nodo podado no puede responder.',
   },
   de_DE: {
     0: 'Mempool wird gestartet',
@@ -156,6 +157,7 @@ export default {
     76: 'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.',
     77: 'Electrs Pruned (works with a pruned node)',
     78: 'Keiner — Adressabfragen deaktiviert',
+    79: 'Wahlen Sie einen Electrum-Server fur Adressabfragen. Gegenuber einem beschnittenen Knoten ist das praktisch nicht optional: mit Keiner werden bestatigte Transaktionen uber Bitcoin-RPC abgefragt, was ein beschnittener Knoten nicht beantworten kann.',
   },
   pl_PL: {
     0: 'Uruchamianie Mempool',
@@ -232,6 +234,7 @@ export default {
     76: 'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.',
     77: 'Electrs Pruned (works with a pruned node)',
     78: 'Brak — wyszukiwanie adresow wylaczone',
+    79: 'Wybierz serwer Electrum do wyszukiwania adresow. Wobec przycietego wezla nie jest to w praktyce opcjonalne: przy opcji Brak potwierdzone transakcje sa pobierane przez RPC Bitcoina, na co przyciety wezel nie odpowie.',
   },
   fr_FR: {
     0: 'Demarrage de Mempool',
@@ -308,5 +311,6 @@ export default {
     76: 'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.',
     77: 'Electrs Pruned (works with a pruned node)',
     78: "Aucun — recherches d'adresses desactivees",
+    79: "Selectionnez un serveur Electrum pour les recherches d'adresses. Face a un noeud elague, ce n'est pas optionnel en pratique : avec Aucun, les transactions confirmees sont recuperees via le RPC Bitcoin, ce qu'un noeud elague ne peut pas fournir.",
   },
 } satisfies Record<string, LangDict>
