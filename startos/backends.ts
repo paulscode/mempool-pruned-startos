@@ -35,9 +35,16 @@ type Endpoints = {
  * The official package and its two mainnet forks run a daemon `bitcoind` with a
  * `sync-progress` check beside it. `knots-blake2b` is a separate lineage and
  * runs a daemon `node` with a `chain` check, which answers a different question:
- * on testnet4 the fork shares magic bytes, port and genesis with ordinary
- * testnet4, so "synced" is not the thing worth asserting. Which chain the node
- * is on is.
+ * both mainnet chains share magic bytes, port 8333 and every block up to 961631,
+ * so a node with no peers on the fork sits one block below activation looking
+ * perfectly synced. "Synced" is not the thing worth asserting there; which chain
+ * the node is on is.
+ *
+ * `knots-blake2b` gained a `sync-progress` check of its own when it adopted the
+ * official action set in 1.0.0:31, so requiring it here would now work. It is
+ * deliberately not required: `chain` already fails while the node is below the
+ * activation height, and a second check that goes amber through the whole of IBD
+ * would only make the dependency look unsatisfied for longer.
  */
 type BackendHealthChecks = readonly string[]
 
@@ -82,8 +89,11 @@ export const backends = {
   // rules at the BLAKE2b fork height instead, so the RDTS variant and the
   // BLAKE2b one stopped being two things to choose between. The package still
   // exists; this explorer just has no reason to offer it.
+  // The id stays `knots-prerdts`; only its title changed. That package renamed
+  // itself to SHA256 without touching its id or version flavor, both of which
+  // are identity the registry indexes by.
   'knots-prerdts': {
-    title: 'Bitcoin Knots (pre-RDTS) Companion',
+    title: 'Bitcoin Knots (SHA256) Companion',
     endpoints: officialEndpoints,
     healthChecks: officialHealthChecks,
   },
@@ -111,6 +121,17 @@ export const defaultBackend: BackendId = 'bitcoind'
 export const versionRange: Record<BackendId, string> = {
   bitcoind:
     '(>=28.4:17 && <29) || (>=29.4:4 && <30) || (>=30.3:4 && <31) || >=31.1:4',
+  // MATCHED THROUGH `satisfies`, NOT DIRECTLY. That package's versions are
+  // flavored (`#knotsprerdts:29.3:N`) and a flavored version never satisfies an
+  // unflavored range, so this does not match its version at all. It matches the
+  // `29.4:13` entry on that package's own `satisfies` list.
+  //
+  // Which also means the number here is not what it looks like. `29.3:25` reads
+  // as that package's own `#knotsprerdts:29.3:25`, and it is not gating on that;
+  // it is a floor on the unflavored versions the package stands in for. Checked
+  // with the SDK's comparator:
+  //   #knotsprerdts:29.3:27 vs >=29.3:25 => false
+  //   29.4:13               vs >=29.3:25 => true
   'knots-prerdts': '>=29.3:25',
   'knots-blake2b': '>=1.0.0:17',
 }
