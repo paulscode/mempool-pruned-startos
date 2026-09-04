@@ -74,6 +74,7 @@ const dict = {
   'Choose which Bitcoin service backs this explorer': 75,
   'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.': 76,
   'Electrs Pruned (works with a pruned node)': 77,
+  'None — address lookups disabled': 78,
 } as const
 
 export type I18nKey = keyof typeof dict

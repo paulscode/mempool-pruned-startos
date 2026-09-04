@@ -18,8 +18,9 @@ const shape = z.object({
   backend: z
     .enum(backendIds as [BackendId, ...BackendId[]])
     .catch(defaultBackend),
+  // Absent means the choice is unmade; 'none' is the user declining an indexer.
   indexer: z
-    .enum(['electrs', 'electrs-pruned', 'fulcrum'])
+    .enum(['electrs', 'electrs-pruned', 'fulcrum', 'none'])
     .optional()
     .catch(undefined),
   torProxy: z.boolean().catch(false),

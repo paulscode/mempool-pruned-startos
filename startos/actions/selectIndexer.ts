@@ -12,8 +12,12 @@ const indexerInputSpec = InputSpec.of({
       fulcrum: i18n('Fulcrum (recommended)'),
       electrs: i18n('Electrs'),
       'electrs-pruned': i18n('Electrs Pruned (works with a pruned node)'),
+      none: i18n('None — address lookups disabled'),
     },
-    default: 'fulcrum',
+    // Nothing preselected, so closing the form without choosing does not read
+    // as a choice already made. The spec accepts null; only the SDK 2.0.9
+    // builder signature does not.
+    default: null as any,
   }),
 })
 
@@ -35,13 +39,7 @@ export const selectIndexer = sdk.Action.withInput(
   indexerInputSpec,
 
   // optionally pre-fill the input form
-  async ({ effects }) => {
-    const indexer = await selectedIndexer(effects)
-
-    return {
-      indexer: indexer as any,
-    }
-  },
+  async ({ effects }) => ({ indexer: await selectedIndexer(effects) }),
 
   // the execution function. Record the choice in StartOS state; init/watchHosts
   // resolves the indexer's LXC-bridge address into ELECTRUM.HOST/PORT next start.

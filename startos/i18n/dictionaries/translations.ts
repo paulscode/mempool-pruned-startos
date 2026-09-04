@@ -79,6 +79,7 @@ export default {
     75: 'Choose which Bitcoin service backs this explorer',
     76: 'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.',
     77: 'Electrs Pruned (works with a pruned node)',
+    78: 'Ninguno — busquedas de direcciones desactivadas',
   },
   de_DE: {
     0: 'Mempool wird gestartet',
@@ -154,6 +155,7 @@ export default {
     75: 'Choose which Bitcoin service backs this explorer',
     76: 'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.',
     77: 'Electrs Pruned (works with a pruned node)',
+    78: 'Keiner — Adressabfragen deaktiviert',
   },
   pl_PL: {
     0: 'Uruchamianie Mempool',
@@ -229,6 +231,7 @@ export default {
     75: 'Choose which Bitcoin service backs this explorer',
     76: 'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.',
     77: 'Electrs Pruned (works with a pruned node)',
+    78: 'Brak — wyszukiwanie adresow wylaczone',
   },
   fr_FR: {
     0: 'Demarrage de Mempool',
@@ -304,5 +307,6 @@ export default {
     75: 'Choose which Bitcoin service backs this explorer',
     76: 'Switching nodes points the explorer at a different chain. Its database is built against the chain it was indexing, so clear the backend cache after switching.',
     77: 'Electrs Pruned (works with a pruned node)',
+    78: "Aucun — recherches d'adresses desactivees",
   },
 } satisfies Record<string, LangDict>
