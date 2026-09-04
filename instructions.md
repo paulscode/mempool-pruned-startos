@@ -2,6 +2,7 @@
 
 ## Documentation
 
+- [Start9 Bitcoin Guides](https://docs.start9.com/bitcoin-guides/) — archival versus pruned Bitcoin nodes on StartOS, and what a block explorer needs from one. Note that this package is the one that does not need an archival node.
 - [Mempool project README](https://github.com/mempool/mempool/blob/master/README.md) — upstream project overview and installation reference.
 
 ## What you get on StartOS
