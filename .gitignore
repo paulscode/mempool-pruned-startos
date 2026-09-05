@@ -6,3 +6,8 @@ node_modules/
 docker-images
 javascript
 ncc-cache
+# Release staging. release.sh writes the .s9pk, its SHA256SUMS and the detached
+# signature here; the published record is the GitHub release, not the repo. Every
+# sibling package ignores this. Without it a `git add -A` after a build sweeps the
+# checksums in, which is how builds/3.3.1.24 through .34 came to be tracked.
+builds/
