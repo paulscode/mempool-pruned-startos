@@ -2,12 +2,14 @@ import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 const notes = `Keeps the difficulty figure working against a Bitcoin Knots node on the BLAKE2b chain.
 
-Knots 29.4.2.knots20260508 splits the RPC field this reads: a block with the new header format reports "difficulty_blake2b" and no longer reports "difficulty" at all. On that chain every block since 961640 has the new header, so against an updated node every block arrived here with no difficulty and the figure stopped being recorded. This release reads whichever name the block carries, so a block from before the change and one from after both work.
+Knots 29.4.2.knots20260508 changed two things this reads. A block with the new header format reports "difficulty_blake2b" and no longer reports "difficulty" at all, so against an updated node every block arrived with no difficulty and the figure stopped being recorded. And the getdifficulty RPC was removed outright, which the hashrate chart called and quietly fell back to zero on.
 
-Nothing else changes, and no reindex is needed. Blocks recorded while the figure was missing keep whatever was stored for them; the difficulty chart fills in again from this release onwards.`
+Both now read whichever name applies, so blocks either side of the BLAKE2b activation work and the current difficulty is reported again.
+
+Nothing else changes and no reindex is needed. Blocks recorded while the figure was missing keep whatever was stored for them; the chart fills in again from here.`
 
 export const current = VersionInfo.of({
-  version: '3.3.1:37',
+  version: '3.3.1:38',
   releaseNotes: {
     en_US: notes,
     es_ES: notes,
