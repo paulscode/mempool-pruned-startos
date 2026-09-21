@@ -1,17 +1,13 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
-const notes = `Fixes address lookups silently doing nothing when no indexer was ever chosen.
+const notes = `Keeps the difficulty figure working against a Bitcoin Knots node on the BLAKE2b chain.
 
-The Select Indexer form preselected Fulcrum without having stored it, so closing the form looked like a choice and saved nothing, and the prompt that would have forced the choice only appeared on a fresh install. An install that updated into the feature was never asked at all. With the choice unmade, no indexer dependency was declared and no Electrum address was written, but the backend was still told to use one, so it fell back to upstream's own defaults and hammered this package's database once a second instead. Both health checks stayed green the whole time.
+Knots 29.4.2.knots20260508 splits the RPC field this reads: a block with the new header format reports "difficulty_blake2b" and no longer reports "difficulty" at all. On that chain every block since 961640 has the new header, so against an updated node every block arrived here with no difficulty and the figure stopped being recorded. This release reads whichever name the block carries, so a block from before the change and one from after both work.
 
-Now nothing is preselected, so a choice has to be made; the prompt is raised whenever the choice is unmade rather than only at install, which reaches an install already in this state on its next start; and the backend setting follows whether an Electrum address actually resolved, so it is never left on upstream's defaults. "None" is an explicit option, with one caveat this package has and upstream does not: against a pruned node, None is not a lighter configuration but a broken one. Without an indexer the backend looks confirmed transactions up over Bitcoin RPC instead, which is the exact call a pruned node cannot answer and the reason the Electrum route exists here. Against an archival node it behaves as upstream's does. The form now says so.
-
-Ported from Start9Labs/mempool-startos#83, which found and fixed this upstream.
-
-Also renames one entry in the node picklist. The pre-RDTS companion node is now called "Bitcoin Knots (SHA256) Companion", and the picklist and the dependency prompt follow it. Only the label changed: same package, same id, so an existing selection keeps working and nothing reindexes.`
+Nothing else changes, and no reindex is needed. Blocks recorded while the figure was missing keep whatever was stored for them; the difficulty chart fills in again from this release onwards.`
 
 export const current = VersionInfo.of({
-  version: '3.3.1:36',
+  version: '3.3.1:37',
   releaseNotes: {
     en_US: notes,
     es_ES: notes,
