@@ -4,7 +4,7 @@ import { configJson } from './file-models/mempool-config.json'
 import { storeJson } from './file-models/store.json'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
-import { selectedIndexer } from './utils'
+import { selectedIndexer, settled } from './utils'
 
 export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
   // There is deliberately no autoconfig task here, and its absence is the whole
@@ -32,13 +32,20 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
     T.DependencyRequirement
   >
 
-  const lnData = await configJson.read((c) => c.LIGHTNING).const(effects)
+  const lnData = await settled(() =>
+    configJson.read((c) => c.LIGHTNING).const(effects),
+  )
   const indexer = await selectedIndexer(effects)
   const backend =
-    (await storeJson.read((s) => s?.backend).const(effects)) ?? defaultBackend
-  const torProxy = await storeJson.read((s) => s?.torProxy).const(effects)
+    (await settled(() => storeJson.read((s) => s?.backend).const(effects))) ??
+    defaultBackend
+  const torProxy = await settled(() =>
+    storeJson.read((s) => s?.torProxy).const(effects),
+  )
   const lndPackage =
-    (await storeJson.read((s) => s?.lightningPackage).const(effects)) ?? 'lnd'
+    (await settled(() =>
+      storeJson.read((s) => s?.lightningPackage).const(effects),
+    )) ?? 'lnd'
 
   if (lnData && lnData.ENABLED) {
     if (lnData.BACKEND === 'lnd' && lndPackage === 'lnd') {

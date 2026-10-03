@@ -7,6 +7,7 @@ import {
   hostPort,
   lndRestBridge,
   selectedIndexer,
+  settled,
 } from '../utils'
 
 /**
@@ -24,7 +25,9 @@ import {
  */
 export const watchHosts = sdk.setupOnInit(async (effects, _) => {
   const indexer = await selectedIndexer(effects)
-  const lightning = await configJson.read((c) => c.LIGHTNING).const(effects)
+  const lightning = await settled(() =>
+    configJson.read((c) => c.LIGHTNING).const(effects),
+  )
   const lndEnabled = lightning?.ENABLED && lightning.BACKEND === 'lnd'
 
   // Always subscribe to bitcoind's reactive address; the indexer/LND reads stay
@@ -36,7 +39,9 @@ export const watchHosts = sdk.setupOnInit(async (effects, _) => {
       ? await electrumBridge(effects, indexer)
       : null
   const lndPackage =
-    (await storeJson.read((s) => s?.lightningPackage).const(effects)) ?? 'lnd'
+    (await settled(() =>
+      storeJson.read((s) => s?.lightningPackage).const(effects),
+    )) ?? 'lnd'
   const lndRest = lndEnabled ? await lndRestBridge(effects, lndPackage) : null
 
   await configJson.merge(

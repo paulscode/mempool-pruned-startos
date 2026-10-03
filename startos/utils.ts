@@ -6,6 +6,29 @@ import { backends, defaultBackend } from './backends'
 import { storeJson } from './file-models/store.json'
 import { sdk } from './sdk'
 
+/**
+ * A `.const` read of store.json or mempool-config.json, which an action may be
+ * writing at that moment.
+ *
+ * FileHelper writes in place and its watcher wakes on the truncate, so a re-run
+ * can read the file empty or half written. The read then throws, and a
+ * `.const` that throws never registers its watch, so nothing re-runs until the
+ * container restarts. Enable Lightning writes store.json and then
+ * mempool-config.json, and the re-run the first write started read the second
+ * mid-write: the dependency set kept the previous Lightning node. A parse
+ * failure is read again shortly; anything else is thrown as before.
+ */
+export async function settled<A>(read: () => Promise<A>): Promise<A> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await read()
+    } catch (e) {
+      if ((e as Error)?.name !== 'SyntaxError' || attempt >= 20) throw e
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+  }
+}
+
 export const randomPassword = {
   charset: 'a-z,A-Z,1-9',
   len: 22,
@@ -78,7 +101,8 @@ export const bitcoindRpcBridge = async (effects: T.Effects) => {
   // lineage and does not, which is why this reads the endpoints from `backends`
   // rather than importing one set of constants.
   const backend =
-    (await storeJson.read((s) => s?.backend).const(effects)) ?? defaultBackend
+    (await settled(() => storeJson.read((s) => s?.backend).const(effects))) ??
+    defaultBackend
   const { rpcHostId: hostId, rpcPort: internalPort } =
     backends[backend].endpoints
   return sdk.host
@@ -147,7 +171,10 @@ const electrumPort = 50001
 export async function selectedIndexer(
   effects: T.Effects,
 ): Promise<IndexerChoice | undefined> {
-  return (await storeJson.read((s) => s.indexer).const(effects)) ?? undefined
+  return (
+    (await settled(() => storeJson.read((s) => s.indexer).const(effects))) ??
+    undefined
+  )
 }
 
 /**

@@ -15,6 +15,7 @@ import {
   clnMountpoint,
   lndMountpoint,
   poolsPort,
+  settled,
   uiPort,
 } from './utils'
 
@@ -52,16 +53,17 @@ export const main = sdk.setupMain(async ({ effects }) => {
   // Dependency setup & checks
   // ========================
 
-  const config = await configJson.read().const(effects)
-  const lndPackage = await storeJson
-    .read((s) => s?.lightningPackage)
-    .const(effects)
+  const config = await settled(() => configJson.read().const(effects))
+  const lndPackage = await settled(() =>
+    storeJson.read((s) => s?.lightningPackage).const(effects),
+  )
   if (!config) throw new Error('Config file not found')
 
   // Which node the user chose. Read as a const so changing it restarts the backend, which it must:
   // it changes both the address CORE_RPC points at and the volume mounted below.
   const backend =
-    (await storeJson.read((s) => s?.backend).const(effects)) ?? defaultBackend
+    (await settled(() => storeJson.read((s) => s?.backend).const(effects))) ??
+    defaultBackend
 
   // V8 old-space heap ceiling for the mempool backend, scaled to the RAM
   // StartOS grants service containers (host MemTotal less its own 1 GiB reserve).
