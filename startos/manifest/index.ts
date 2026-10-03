@@ -29,7 +29,7 @@ export const manifest = setupManifest({
     },
     backend: {
       source: {
-        dockerTag: 'ghcr.io/paulscode/mempool-pruned-backend:v3.3.1-pruned.7',
+        dockerTag: 'ghcr.io/paulscode/mempool-pruned-backend:v3.3.1-pruned.8',
       },
       arch: ['x86_64', 'aarch64'],
     },
@@ -90,6 +90,14 @@ export const manifest = setupManifest({
       metadata: {
         title: 'Fulcrum',
         icon: 'https://raw.githubusercontent.com/Start9Labs/fulcrum-startos/master/icon.png',
+      },
+    },
+    'lightning-fork': {
+      description: lndDescription,
+      optional: true,
+      metadata: {
+        title: 'Lightning Fork',
+        icon: 'https://raw.githubusercontent.com/paulscode/lightning-fork-startos/master/icon.png',
       },
     },
     'c-lightning': {

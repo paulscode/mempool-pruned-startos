@@ -1,4 +1,5 @@
 import { configJson } from '../file-models/mempool-config.json'
+import { storeJson } from '../file-models/store.json'
 import { sdk } from '../sdk'
 import {
   bitcoindRpcBridge,
@@ -34,7 +35,9 @@ export const watchHosts = sdk.setupOnInit(async (effects, _) => {
     indexer && indexer !== 'none'
       ? await electrumBridge(effects, indexer)
       : null
-  const lndRest = lndEnabled ? await lndRestBridge(effects) : null
+  const lndPackage =
+    (await storeJson.read((s) => s?.lightningPackage).const(effects)) ?? 'lnd'
+  const lndRest = lndEnabled ? await lndRestBridge(effects, lndPackage) : null
 
   await configJson.merge(
     effects,

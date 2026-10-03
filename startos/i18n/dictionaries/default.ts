@@ -76,6 +76,9 @@ const dict = {
   'Electrs Pruned (works with a pruned node)': 77,
   'None — address lookups disabled': 78,
   'Select an Electrum server to use for address lookups. Against a pruned node this is not optional in practice: with None, confirmed transactions are looked up over Bitcoin RPC, which a pruned node cannot answer.': 79,
+  'Lightning Fork (BLAKE2b)': 80,
+  'Lightning Fork follows the Bitcoin BLAKE2b chain, and this explorer reads the SHA256 chain through the SHA256 Companion. Choose a node on the BLAKE2b chain under Select Node first.': 81,
+  "Lightning Fork, this explorer's Lightning node, follows the Bitcoin BLAKE2b chain, and the SHA256 Companion reads the SHA256 chain. Choose another Lightning node, or None, under Enable Lightning first.": 82,
 } as const
 
 export type I18nKey = keyof typeof dict

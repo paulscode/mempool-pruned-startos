@@ -24,6 +24,13 @@ const shape = z.object({
     .optional()
     .catch(undefined),
   torProxy: z.boolean().catch(false),
+  /**
+   * Which package serves LND's API when Lightning is enabled with the LND
+   * backend: Start9's LND, or Lightning Fork, which is LND for the Bitcoin
+   * BLAKE2b chain and exposes the same API, files and health checks. Mempool's
+   * own config says only `lnd`; which package that is, is StartOS state.
+   */
+  lightningPackage: z.enum(['lnd', 'lightning-fork']).catch('lnd'),
 })
 
 export const storeJson = FileHelper.json(

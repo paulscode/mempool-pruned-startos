@@ -23,6 +23,7 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
   let currentDeps = {} as Record<
     | 'bitcoind'
     | 'lnd'
+    | 'lightning-fork'
     | 'c-lightning'
     | 'fulcrum'
     | 'electrs'
@@ -36,14 +37,29 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
   const backend =
     (await storeJson.read((s) => s?.backend).const(effects)) ?? defaultBackend
   const torProxy = await storeJson.read((s) => s?.torProxy).const(effects)
+  const lndPackage =
+    (await storeJson.read((s) => s?.lightningPackage).const(effects)) ?? 'lnd'
 
   if (lnData && lnData.ENABLED) {
-    if (lnData.BACKEND === 'lnd') {
+    if (lnData.BACKEND === 'lnd' && lndPackage === 'lnd') {
       currentDeps.lnd = {
         id: 'lnd',
         kind: 'running',
         versionRange: '>=0.21.1-beta:4',
         healthChecks: ['lnd', 'sync-progress'],
+      }
+    }
+
+    // Lightning Fork also answers whether its node is on the BLAKE2b chain:
+    // waited on too, since its graph means nothing to an explorer of another
+    // chain. 0.21.3-beta.16 is the first that pays BOLT 12 offers on mainnet,
+    // and the one this was tested against.
+    if (lnData.BACKEND === 'lnd' && lndPackage === 'lightning-fork') {
+      currentDeps['lightning-fork'] = {
+        id: 'lightning-fork',
+        kind: 'running',
+        versionRange: '>=0.21.3-beta.16:0',
+        healthChecks: ['lnd', 'sync-progress', 'chain-identity'],
       }
     }
 

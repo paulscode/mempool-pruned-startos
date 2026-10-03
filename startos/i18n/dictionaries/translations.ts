@@ -81,6 +81,9 @@ export default {
     77: 'Electrs Pruned (works with a pruned node)',
     78: 'Ninguno — busquedas de direcciones desactivadas',
     79: 'Seleccione un servidor Electrum para busquedas de direcciones. Frente a un nodo podado esto no es opcional en la practica: con Ninguno, las transacciones confirmadas se consultan por RPC de Bitcoin, algo que un nodo podado no puede responder.',
+    80: "Lightning Fork (BLAKE2b)",
+    81: "Lightning Fork sigue la cadena Bitcoin BLAKE2b, y este explorador lee la cadena SHA256 a traves del SHA256 Companion. Elija primero un nodo de la cadena BLAKE2b en Select Node.",
+    82: "Lightning Fork, el nodo Lightning de este explorador, sigue la cadena Bitcoin BLAKE2b, y el SHA256 Companion lee la cadena SHA256. Elija otro nodo Lightning o Ninguno en Habilitar Lightning primero.",
   },
   de_DE: {
     0: 'Mempool wird gestartet',
@@ -158,6 +161,9 @@ export default {
     77: 'Electrs Pruned (works with a pruned node)',
     78: 'Keiner — Adressabfragen deaktiviert',
     79: 'Wahlen Sie einen Electrum-Server fur Adressabfragen. Gegenuber einem beschnittenen Knoten ist das praktisch nicht optional: mit Keiner werden bestatigte Transaktionen uber Bitcoin-RPC abgefragt, was ein beschnittener Knoten nicht beantworten kann.',
+    80: "Lightning Fork (BLAKE2b)",
+    81: "Lightning Fork folgt der Bitcoin-BLAKE2b-Kette, und dieser Explorer liest die SHA256-Kette über den SHA256 Companion. Wählen Sie zuerst unter Select Node einen Knoten der BLAKE2b-Kette.",
+    82: "Lightning Fork, der Lightning-Knoten dieses Explorers, folgt der Bitcoin-BLAKE2b-Kette, und der SHA256 Companion liest die SHA256-Kette. Wählen Sie zuerst unter Lightning aktivieren einen anderen Lightning-Knoten oder Keiner.",
   },
   pl_PL: {
     0: 'Uruchamianie Mempool',
@@ -235,6 +241,9 @@ export default {
     77: 'Electrs Pruned (works with a pruned node)',
     78: 'Brak — wyszukiwanie adresow wylaczone',
     79: 'Wybierz serwer Electrum do wyszukiwania adresow. Wobec przycietego wezla nie jest to w praktyce opcjonalne: przy opcji Brak potwierdzone transakcje sa pobierane przez RPC Bitcoina, na co przyciety wezel nie odpowie.',
+    80: "Lightning Fork (BLAKE2b)",
+    81: "Lightning Fork podaza za lancuchem Bitcoin BLAKE2b, a ten eksplorator czyta lancuch SHA256 przez SHA256 Companion. Najpierw wybierz wezel lancucha BLAKE2b w Select Node.",
+    82: "Lightning Fork, wezel Lightning tego eksploratora, podaza za lancuchem Bitcoin BLAKE2b, a SHA256 Companion czyta lancuch SHA256. Najpierw wybierz inny wezel Lightning lub Brak w Wlacz Lightning.",
   },
   fr_FR: {
     0: 'Demarrage de Mempool',
@@ -312,5 +321,8 @@ export default {
     77: 'Electrs Pruned (works with a pruned node)',
     78: "Aucun — recherches d'adresses desactivees",
     79: "Selectionnez un serveur Electrum pour les recherches d'adresses. Face a un noeud elague, ce n'est pas optionnel en pratique : avec Aucun, les transactions confirmees sont recuperees via le RPC Bitcoin, ce qu'un noeud elague ne peut pas fournir.",
+    80: "Lightning Fork (BLAKE2b)",
+    81: "Lightning Fork suit la chaine Bitcoin BLAKE2b, et cet explorateur lit la chaine SHA256 via le SHA256 Companion. Choisissez d'abord un noeud de la chaine BLAKE2b dans Select Node.",
+    82: "Lightning Fork, le noeud Lightning de cet explorateur, suit la chaine Bitcoin BLAKE2b, et le SHA256 Companion lit la chaine SHA256. Choisissez d'abord un autre noeud Lightning ou Aucun dans Activer Lightning.",
   },
 } satisfies Record<string, LangDict>

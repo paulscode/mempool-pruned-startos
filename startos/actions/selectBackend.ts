@@ -1,4 +1,5 @@
 import { backends, defaultBackend } from '../backends'
+import { configJson } from '../file-models/mempool-config.json'
 import { storeJson } from '../file-models/store.json'
 import { i18n } from '../i18n'
 import { sdk } from '../sdk'
@@ -49,6 +50,25 @@ export const selectBackend = sdk.Action.withInput(
   // Recorded as intent. The address it resolves to is read from the selected
   // package's bridge at start, by bitcoindRpcBridge, so nothing here writes an
   // address that could go stale.
-  async ({ effects, input }) =>
-    storeJson.merge(effects, { backend: input.backend as any }),
+  async ({ effects, input }) => {
+    // The reverse of the check in Enable Lightning: Lightning Fork's channels
+    // are funded on the BLAKE2b chain, which the SHA256 Companion does not
+    // follow.
+    if (input.backend === 'knots-prerdts') {
+      const lightning = await configJson.read((c) => c.LIGHTNING).once()
+      const lndPackage = await storeJson.read((s) => s?.lightningPackage).once()
+      if (
+        lightning?.ENABLED &&
+        lightning.BACKEND === 'lnd' &&
+        lndPackage === 'lightning-fork'
+      ) {
+        throw new Error(
+          i18n(
+            "Lightning Fork, this explorer's Lightning node, follows the Bitcoin BLAKE2b chain, and the SHA256 Companion reads the SHA256 chain. Choose another Lightning node, or None, under Enable Lightning first.",
+          ),
+        )
+      }
+    }
+    await storeJson.merge(effects, { backend: input.backend as any })
+  },
 )

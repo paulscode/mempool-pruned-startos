@@ -24,6 +24,14 @@ export const dbPort = 3306
 export const poolsPort = 8998
 export const btcMountpoint = '/mnt/bitcoind'
 export const lndMountpoint = '/mnt/lnd'
+
+/**
+ * The packages that serve LND's API. Lightning Fork shares LND's REST host and
+ * port, its volume layout (tls.cert at the root, macaroons under
+ * data/chain/bitcoin/mainnet) and its `lnd` and `sync-progress` health checks,
+ * so everything else about the LND backend applies to it unchanged.
+ */
+export type LndPackage = 'lnd' | 'lightning-fork'
 export const clnMountpoint = '/mnt/cln'
 
 export const lndCertPath = `${lndMountpoint}/tls.cert`
@@ -89,10 +97,10 @@ export const bitcoindRpcBridge = async (effects: T.Effects) => {
  * prefixes `https://`. `null` until LND's REST binding publishes at
  * wallet-unlock — the caller then omits `LND` rather than writing a fake URL.
  */
-export const lndRestBridge = (effects: T.Effects) =>
+export const lndRestBridge = (effects: T.Effects, packageId: LndPackage) =>
   sdk.host
     .getBridgeAddress(effects, {
-      packageId: 'lnd',
+      packageId,
       hostId: controlHostId,
       internalPort: restPort,
     })

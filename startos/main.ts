@@ -53,6 +53,9 @@ export const main = sdk.setupMain(async ({ effects }) => {
   // ========================
 
   const config = await configJson.read().const(effects)
+  const lndPackage = await storeJson
+    .read((s) => s?.lightningPackage)
+    .const(effects)
   if (!config) throw new Error('Config file not found')
 
   // Which node the user chose. Read as a const so changing it restarts the backend, which it must:
@@ -161,7 +164,8 @@ export const main = sdk.setupMain(async ({ effects }) => {
     switch (config.LIGHTNING.BACKEND) {
       case 'lnd':
         backendMounts = backendMounts.mountDependency<typeof lndManifest>({
-          dependencyId: 'lnd',
+          // Start9's LND or Lightning Fork, whose volume is laid out the same.
+          dependencyId: (lndPackage ?? 'lnd') as 'lnd',
           volumeId: 'main',
           subpath: null,
           mountpoint: lndMountpoint,

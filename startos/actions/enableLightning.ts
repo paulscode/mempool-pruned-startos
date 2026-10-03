@@ -1,4 +1,5 @@
 import { configJson } from '../file-models/mempool-config.json'
+import { storeJson } from '../file-models/store.json'
 import { sdk } from '../sdk'
 import { clnMountpoint, isLowRam, lndCertPath, lndMacaroonPath } from '../utils'
 import { i18n } from '../i18n'
@@ -17,6 +18,7 @@ export const lightningInputSpec = InputSpec.of({
     default: 'none',
     values: {
       lnd: i18n('LND'),
+      'lightning-fork': i18n('Lightning Fork (BLAKE2b)'),
       cln: i18n('Core Lightning'),
       none: i18n('None'),
     },
@@ -47,16 +49,38 @@ export const enableLightning = sdk.Action.withInput(
   async ({ effects }) => {
     const config = await configJson.read().const(effects)
     if (!config) throw new Error('Config file not found')
+    const lndPackage = await storeJson
+      .read((s) => s?.lightningPackage)
+      .const(effects)
 
-    return {
-      lightning: config.LIGHTNING.ENABLED ? config.LIGHTNING.BACKEND : 'none',
-    } as LightningInputSpec
+    const lightning: LightningInputSpec['lightning'] = !config.LIGHTNING.ENABLED
+      ? 'none'
+      : config.LIGHTNING.BACKEND === 'lnd' && lndPackage === 'lightning-fork'
+        ? 'lightning-fork'
+        : config.LIGHTNING.BACKEND
+    return { lightning }
   },
 
   // the execution function
   async ({ effects, input }) => {
     switch (input.lightning) {
       case 'lnd':
+      case 'lightning-fork': {
+        // Lightning Fork's graph is the Bitcoin BLAKE2b chain's: its channels
+        // are funded there, so an explorer reading the SHA256 chain would show
+        // them against transactions it does not have.
+        const backend = await storeJson.read((s) => s?.backend).once()
+        if (
+          input.lightning === 'lightning-fork' &&
+          backend === 'knots-prerdts'
+        ) {
+          throw new Error(
+            i18n(
+              'Lightning Fork follows the Bitcoin BLAKE2b chain, and this explorer reads the SHA256 chain through the SHA256 Companion. Choose a node on the BLAKE2b chain under Select Node first.',
+            ),
+          )
+        }
+        await storeJson.merge(effects, { lightningPackage: input.lightning })
         await configJson.merge(effects, {
           LIGHTNING: { ENABLED: true, BACKEND: 'lnd' },
           LND: {
@@ -65,6 +89,7 @@ export const enableLightning = sdk.Action.withInput(
           },
         })
         break
+      }
       case 'cln':
         await configJson.merge(effects, {
           LIGHTNING: { ENABLED: true, BACKEND: 'cln' },
