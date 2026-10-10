@@ -32,7 +32,7 @@ Open the **Web UI** interface to reach Mempool. The home page shows the live mem
 ### Actions
 
 - **Select Indexer** — choose the Electrum backend: Fulcrum, Electrs, Electrs Pruned, or None. Mempool's dependency set updates accordingly, and None leaves address lookups off.
-- **Enable Lightning** — choose LND, Core Lightning, or none for the Lightning tab's data source. The selected node is mounted read-only. On a low-memory box the form carries a warning: the Lightning network sync is memory-hungry, and turning it on alongside Bitcoin and your indexer can tip such a box into out-of-memory crashes. You can still proceed.
+- **Enable Lightning** — choose LND, Lightning Fork (BLAKE2b), Core Lightning, or none for the Lightning tab's data source. Lightning Fork cannot be chosen while Select Node is on the SHA256 Companion. The selected node is mounted read-only. On a low-memory box the form carries a warning: the Lightning network sync is memory-hungry, and turning it on alongside Bitcoin and your indexer can tip such a box into out-of-memory crashes. You can still proceed.
 - **Indexing and Performance** — tune backend behavior on a single form:
   - **Performance Profile** — pick **Low-CPU** (default; polls bitcoind every 8s, projects 4 future blocks), **Balanced** (4s / 6 blocks), or **Responsive** (2s / 8 blocks; highest CPU). The Mempool backend rebuilds its block projection on every poll, so this is the main lever for CPU usage on low-power devices.
   - **Enable Statistics** — leave on (default) for the tx/s and vbytes/s charts; turn off to stop the periodic statistics writes to the database, which leaves those charts without data.

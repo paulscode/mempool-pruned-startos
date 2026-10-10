@@ -127,7 +127,7 @@ The selected node's minimum versions are in `backends.ts`. The `bitcoind` entry 
 | ------------------------------------------- | --------- | -------------------------------------------------------- | ----------------------------------- |
 | The selected node                           | `running` | Always                                                   | Per backend, see `backends.ts`      |
 | `fulcrum`, `electrs` _or_ `electrs-pruned`  | `running` | Whichever the indexer action selects; none with **None** | The indexer's ready and sync checks |
-| `lnd` _or_ `c-lightning`                    | `running` | Only with Lightning enabled                              | The node's ready and sync checks    |
+| `lnd`, `lightning-fork` _or_ `c-lightning`  | `running` | Only with Lightning enabled                              | The node's ready and sync checks    |
 | `tor`                                       | `running` | Only with the Tor proxy enabled                          | `tor`                               |
 
 **Bitcoin may stay pruned.** Upstream raises a re-raising `critical` task against Bitcoin demanding `prune=0` and `txindex=true`; this package raises none, because the fork it ships resolves confirmed transactions through Electrum rather than `getrawtransaction`. Address lookups still need an Electrum indexer, which is what the indexer selection is for, and against a pruned node that indexer has to be one that tolerates pruning.
@@ -294,7 +294,8 @@ dependencies:
   - fulcrum # or electrs or electrs-pruned; whichever the indexer action selects
   - electrs
   - electrs-pruned
-  - lnd # or c-lightning; only with Lightning enabled
+  - lnd # or lightning-fork or c-lightning; only with Lightning enabled
+  - lightning-fork
   - c-lightning
   - tor # only with the Tor proxy enabled
 interfaces:
