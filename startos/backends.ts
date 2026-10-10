@@ -134,17 +134,17 @@ export const versionRange: Record<BackendId, string> = {
   // an id of its own, and this term does not reach it.
   bitcoind:
     '(>=28.4:29 && <29) || (>=29.4:16 && <30) || (>=30.3:16 && <31) || >=31.1:16 || >=#knotsprerdts:29.3:29',
-  // MATCHED THROUGH `satisfies`, NOT DIRECTLY. That package's versions are
-  // flavored (`#knotsprerdts:29.3:N`) and a flavored version never satisfies an
-  // unflavored range, so this does not match its version at all. It matches the
-  // `29.4:13` entry on that package's own `satisfies` list.
+  // The companions' floors are the first revisions carrying the same two proxy
+  // fixes as the bitcoind floor above: knots-prerdts #knotsprerdts:29.3:29 and
+  // knots-blake2b 1.0.0:32.
   //
-  // Which also means the number here is not what it looks like. `29.3:25` reads
-  // as that package's own `#knotsprerdts:29.3:25`, and it is not gating on that;
-  // it is a floor on the unflavored versions the package stands in for. Checked
-  // with the SDK's comparator:
-  //   #knotsprerdts:29.3:27 vs >=29.3:25 => false
-  //   29.4:13               vs >=29.3:25 => true
-  'knots-prerdts': '>=29.3:25',
-  'knots-blake2b': '>=1.0.0:17',
+  // Flavored, and it has to be. That package's versions are `#knotsprerdts:29.3:N`,
+  // and the unflavored `>=29.3:25` this used to be never matched them at all: it
+  // matched the `29.4:13` on that package's own `satisfies` list, which every
+  // revision carries, so it gated nothing. Checked with the SDK's comparator:
+  //   #knotsprerdts:29.3:28 vs >=#knotsprerdts:29.3:29 => false
+  //   #knotsprerdts:29.3:29 vs >=#knotsprerdts:29.3:29 => true
+  //   29.4:13               vs >=#knotsprerdts:29.3:29 => false
+  'knots-prerdts': '>=#knotsprerdts:29.3:29',
+  'knots-blake2b': '>=1.0.0:32',
 }

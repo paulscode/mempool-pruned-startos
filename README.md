@@ -121,7 +121,7 @@ Two defaults depart from upstream's:
 
 Bitcoin is required; the rest are chosen, and each choice changes which dependency exists.
 
-The selected node's minimum versions are in `backends.ts`. The `bitcoind` entry takes upstream's range as is: 28.4:29, 29.4:16, 30.3:16 or 31.1:16 depending on the line, or `#knotsprerdts:29.3:29`. Those are the revisions that ship btc-rpc-proxy v0.8.1, which fixes a pruned block that no peer would serve and a proxy that answered 401 from the node's next restart onwards.
+The selected node's minimum versions are in `backends.ts`. The `bitcoind` entry takes upstream's range as is: 28.4:29, 29.4:16, 30.3:16 or 31.1:16 depending on the line, or `#knotsprerdts:29.3:29`. Those are the revisions that ship btc-rpc-proxy v0.8.1, which fixes a pruned block that no peer would serve and a proxy that answered 401 from the node's next restart onwards. The two companions are held to their first revisions with the same fixes: `knots-blake2b` 1.0.0:32 and `knots-prerdts` `#knotsprerdts:29.3:29` (flavored, so it matches that package's own versions rather than its `satisfies` list).
 
 | Dependency                                  | Kind      | Required                                                 | Health checks                       |
 | ------------------------------------------- | --------- | -------------------------------------------------------- | ----------------------------------- |
