@@ -9,7 +9,7 @@ import { sdk } from '../sdk'
 // ELECTRUM.HOST and SOCKS5PROXY, written by init/watchHosts and
 // init/watchTorProxy. Keeping intent here is what lets the proxy be switched off
 // when tor is uninstalled without forgetting that the user asked for it.
-const shape = z.object({
+const shape = z.looseObject({
   /**
    * Which bitcoind flavor to run against. `.catch()` rather than `.optional()`
    * so an absent or unreadable store still yields a resolvable backend, the same

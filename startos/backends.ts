@@ -114,13 +114,26 @@ export const defaultBackend: BackendId = 'bitcoind'
 /**
  * The minimum version of each backend this package will accept.
  *
- * `bitcoind` and the two mainnet forks are held at the revision that introduced
- * the bridge-resolvable RPC host, which is what `bitcoindRpcBridge` needs.
  * `knots-blake2b` has its own numbering and is held at its current release.
  */
 export const versionRange: Record<BackendId, string> = {
+  // Upstream's range, taken as is. Each line is held at the revision that ships
+  // btc-rpc-proxy v0.8.1 (28.4:29, 29.4:16, 30.3:16, 31.1:16). That proxy fixes
+  // two stalls, neither of which heals on its own: a pruned block whose coinbase
+  // commits to witnesses it never carried was refused from every peer, so the
+  // block could never be fetched, and the RPC cookie was read once, so from the
+  // node's next restart every caller got 401 until the proxy restarted. The
+  // first is exactly the fetch a pruned node makes for old blocks. The earlier
+  // floors (28.4:17, 29.4:4, ...) were the bridge-resolvable RPC host that
+  // `bitcoindRpcBridge` needs, which these all include.
+  //
+  // The last term is Start9-Community's Bitcoin Knots pre-RDTS package, which
+  // ships under the `bitcoind` id as `#knotsprerdts:29.3:N`. Its `satisfies`
+  // list stops at 29.4:15, below the new floor, so upstream names its flavor
+  // directly. The `knots-prerdts` companion below is a different package with
+  // an id of its own, and this term does not reach it.
   bitcoind:
-    '(>=28.4:17 && <29) || (>=29.4:4 && <30) || (>=30.3:4 && <31) || >=31.1:4',
+    '(>=28.4:29 && <29) || (>=29.4:16 && <30) || (>=30.3:16 && <31) || >=31.1:16 || >=#knotsprerdts:29.3:29',
   // MATCHED THROUGH `satisfies`, NOT DIRECTLY. That package's versions are
   // flavored (`#knotsprerdts:29.3:N`) and a flavored version never satisfies an
   // unflavored range, so this does not match its version at all. It matches the

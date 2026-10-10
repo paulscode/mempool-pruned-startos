@@ -3,7 +3,7 @@ import { totalmem } from 'os'
 import { controlHostId, restPort } from 'lnd-startos/startos/interfaces'
 import { socksHostId, socksPort } from 'tor-startos/startos/utils'
 import { backends, defaultBackend } from './backends'
-import { storeJson } from './file-models/store.json'
+import { storeJson } from './fileModels/store.json'
 import { sdk } from './sdk'
 
 /**

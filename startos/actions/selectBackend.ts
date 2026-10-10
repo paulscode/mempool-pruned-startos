@@ -1,6 +1,6 @@
 import { backends, defaultBackend } from '../backends'
-import { configJson } from '../file-models/mempool-config.json'
-import { storeJson } from '../file-models/store.json'
+import { configJson } from '../fileModels/mempool-config.json'
+import { storeJson } from '../fileModels/store.json'
 import { i18n } from '../i18n'
 import { sdk } from '../sdk'
 

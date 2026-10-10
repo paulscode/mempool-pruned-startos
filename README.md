@@ -104,7 +104,7 @@ Within `mempool-config.json`:
 
 **Seeded once** — `DATABASE.PASSWORD`, generated at install for the bundled database.
 
-**Yours** — everything else, including the whole `EXTERNAL_DATA_SERVER` section and the fiat-price settings. Those are seeded with upstream's own values and never re-asserted, so a hand edit survives.
+**Yours** — everything else, including the whole `EXTERNAL_DATA_SERVER` section and the fiat-price settings. Those are seeded with upstream's own values and never re-asserted, so a hand edit survives. Both models are built with `z.looseObject`, so a key neither of them knows about also survives a write rather than being dropped.
 
 Two defaults depart from upstream's:
 
@@ -120,6 +120,8 @@ Two defaults depart from upstream's:
 ## Dependencies
 
 Bitcoin is required; the rest are chosen, and each choice changes which dependency exists.
+
+The selected node's minimum versions are in `backends.ts`. The `bitcoind` entry takes upstream's range as is: 28.4:29, 29.4:16, 30.3:16 or 31.1:16 depending on the line, or `#knotsprerdts:29.3:29`. Those are the revisions that ship btc-rpc-proxy v0.8.1, which fixes a pruned block that no peer would serve and a proxy that answered 401 from the node's next restart onwards.
 
 | Dependency                                  | Kind      | Required                                                 | Health checks                       |
 | ------------------------------------------- | --------- | -------------------------------------------------------- | ----------------------------------- |

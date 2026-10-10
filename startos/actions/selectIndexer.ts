@@ -1,4 +1,4 @@
-import { storeJson } from '../file-models/store.json'
+import { storeJson } from '../fileModels/store.json'
 import { i18n } from '../i18n'
 import { sdk } from '../sdk'
 import { selectedIndexer } from '../utils'
@@ -7,13 +7,13 @@ const { InputSpec, Value } = sdk
 const indexerInputSpec = InputSpec.of({
   indexer: Value.select({
     name: i18n('Select Indexer'),
-    // Upstream's option set, but not upstream's cost. Upstream requires an
-    // archival node with txindex, so None there only loses address lookups.
-    // Here the node may be pruned, and BACKEND 'none' sends confirmed
+    // Upstream's option list, but not upstream's cost for None. Upstream
+    // requires an archival node with txindex, so None there only loses address
+    // lookups. Here the node may be pruned, and BACKEND 'none' sends confirmed
     // transaction lookups back to Bitcoin RPC, which is the exact call this
     // package exists to avoid.
     description: i18n(
-      'Select an Electrum server to use for address lookups. Against a pruned node this is not optional in practice: with None, confirmed transactions are looked up over Bitcoin RPC, which a pruned node cannot answer.',
+      '- Fulcrum: Fulcrum on this server answers address lookups.\n- Electrs: Electrs on this server answers address lookups.\n- Electrs Pruned: Electrs Pruned on this server answers address lookups. Use it against a pruned node: it is the only one of the three that can index blocks your node has already discarded.\n- None: address search is turned off. Against a pruned node, transaction pages break too: confirmed transactions are then looked up over Bitcoin RPC, which a pruned node cannot answer.\nThe indexer you choose must be installed and running on this server.',
     ),
     values: {
       fulcrum: i18n('Fulcrum (recommended)'),
@@ -34,7 +34,7 @@ export const selectIndexer = sdk.Action.withInput(
   {
     name: i18n('Select Indexer'),
     description: i18n(
-      'Enables address lookups via an internal indexer instance',
+      'Choose the Electrum server Mempool uses to look up addresses, or turn address lookups off.',
     ),
     warning: null,
     allowedStatuses: 'any',

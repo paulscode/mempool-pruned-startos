@@ -79,6 +79,12 @@ const dict = {
   'Lightning Fork (BLAKE2b)': 80,
   'Lightning Fork follows the Bitcoin BLAKE2b chain, and this explorer reads the SHA256 chain through the SHA256 Companion. Choose a node on the BLAKE2b chain under Select Node first.': 81,
   "Lightning Fork, this explorer's Lightning node, follows the Bitcoin BLAKE2b chain, and the SHA256 Companion reads the SHA256 chain. Choose another Lightning node, or None, under Enable Lightning first.": 82,
+  'Choose the Electrum server Mempool uses to look up addresses, or turn address lookups off.': 83,
+  '- Fulcrum: Fulcrum on this server answers address lookups.\n- Electrs: Electrs on this server answers address lookups.\n- Electrs Pruned: Electrs Pruned on this server answers address lookups. Use it against a pruned node: it is the only one of the three that can index blocks your node has already discarded.\n- None: address search is turned off. Against a pruned node, transaction pages break too: confirmed transactions are then looked up over Bitcoin RPC, which a pruned node cannot answer.\nThe indexer you choose must be installed and running on this server.': 84,
+  '- LND: the Lightning tab shows network data from LND on this server.\n- Lightning Fork (BLAKE2b): the Lightning tab shows network data from Lightning Fork on this server. It follows the BLAKE2b chain, and cannot be chosen while the explorer reads the SHA256 chain through the SHA256 Companion.\n- Core Lightning: the Lightning tab shows network data from Core Lightning on this server.\n- None: the Lightning tab is hidden.': 85,
+  '- Low-CPU: polls Bitcoin every 8 seconds and projects the next 4 blocks. Uses the least CPU.\n- Balanced: polls every 4 seconds and projects the next 6 blocks.\n- Responsive: polls every 2 seconds and projects the next 8 blocks, as upstream Mempool does by default. Uses the most CPU.': 86,
+  "Records mempool statistics, such as transactions and vbytes per second, in the database for Mempool's charts. Turning it off stops those periodic database writes, and the statistics charts have no data.": 87,
+  '- Debug: everything, including the per-block progress of an indexing backfill. Very noisy; switch back to Info once you have what you need.\n- Info: normal operation. Backfill progress is hidden, so the log can look idle while a backfill runs.\n- Warning: only warnings and errors.\n- Error: only errors.': 88,
 } as const
 
 export type I18nKey = keyof typeof dict

@@ -1,5 +1,5 @@
-import { configJson } from '../file-models/mempool-config.json'
-import { storeJson } from '../file-models/store.json'
+import { configJson } from '../fileModels/mempool-config.json'
+import { storeJson } from '../fileModels/store.json'
 import { sdk } from '../sdk'
 import { clnMountpoint, isLowRam, lndCertPath, lndMacaroonPath } from '../utils'
 import { i18n } from '../i18n'
@@ -14,7 +14,9 @@ const lowRamWarning = isLowRam()
 export const lightningInputSpec = InputSpec.of({
   lightning: Value.select({
     name: i18n('Lightning Node'),
-    description: i18n('Select the internal node implementation'),
+    description: i18n(
+      '- LND: the Lightning tab shows network data from LND on this server.\n- Lightning Fork (BLAKE2b): the Lightning tab shows network data from Lightning Fork on this server. It follows the BLAKE2b chain, and cannot be chosen while the explorer reads the SHA256 chain through the SHA256 Companion.\n- Core Lightning: the Lightning tab shows network data from Core Lightning on this server.\n- None: the Lightning tab is hidden.',
+    ),
     default: 'none',
     values: {
       lnd: i18n('LND'),
