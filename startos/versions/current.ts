@@ -1,19 +1,17 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
-const notes = `Lightning Fork can be the explorer's Lightning node, the mining pages work on a pruned node, and on the BLAKE2b chain fiat values are BTCB2's own.
+const notes = `The Bitcoin node must be a recent enough revision, and each setting now describes its options.
 
-Enable Lightning offers Lightning Fork (BLAKE2b) beside LND and Core Lightning. The explorer reads Lightning Fork's network graph the way it reads LND's, using its read-only credentials. Lightning Fork runs on the BLAKE2b chain, so it cannot be chosen while the explorer follows the node on the SHA256 chain.
+If Select Node is on Bitcoin Knots, that node must be at least 28.4:29, 29.4:16, 30.3:16 or 31.1:16, depending on its version line, or 29.3:29 for Bitcoin Knots (pre-RDTS). Those revisions fix two faults in the node's RPC proxy, each of which stopped the explorer until something was restarted. Some blocks mined in the months before SegWit activated could not be fetched from any peer, and fetching from peers is how the explorer reads every block a pruned node has discarded. And after the node restarted, the proxy kept refusing the explorer's login until the proxy itself was restarted. The two companion nodes are unaffected.
 
-The Lightning pages also left out every channel on a pruned node. To date and size a channel, the explorer looked up the transaction that opened it, which only a node keeping a full transaction index can answer, and a pruned node cannot keep one. It now takes a channel's capacity from the Lightning node and its date from the block header, which a pruned node keeps for every block.
+Select Indexer, Enable Lightning and Indexing and Performance now list each of their options and what it does. The Spanish, German, Polish and French text has its accented letters back.
 
-On a pruned node the mining pages stopped filling in. Indexing reached the first block below your node's prune height, asked the node for figures it can no longer compute for that block, failed, and started again every ten seconds, so hashrate, difficulty and pool statistics never ran either. Those figures now come from the block itself, fetched from peers as other old blocks already are, and match the node's own exactly with one exception: per-transaction fees would need every input's previous transaction, so an older block shows its average fee rate across its fee range instead of a spread. The catch-up runs once and takes a while. Each new block also no longer waits up to a minute while the explorer asks peers for stale blocks your node has pruned, which they do not serve.
-
-On the BLAKE2b chain every fiat figure was the price of bitcoin on the SHA256 chain, about two hundred times too high. Prices now come from BTCB2's dollar market on neoxa.exchange, the same source as Lightning Fork and Sparrow BLAKE2b, with other currencies converted at Coingecko's rates. Past values use Neoxa's hourly prices since BTCB2 listed on 1 September 2026; transactions between the fork and the listing use its first traded price, and anything before the fork keeps bitcoin's price, which was the same coin then. On first start, prices recorded after the fork are replaced. On the SHA256 chain nothing about prices changes.
+A key added to the configuration file by hand is now kept when the package rewrites the file, even if the package does not know that key.
 
 Nothing you have set changes and no reindex is needed.`
 
 export const current = VersionInfo.of({
-  version: '3.3.1:39',
+  version: '3.3.1:40',
   releaseNotes: {
     en_US: notes,
     es_ES: notes,
@@ -22,11 +20,9 @@ export const current = VersionInfo.of({
     fr_FR: notes,
   },
   migrations: {
-    // Nothing to migrate. An install that already uses LND has no
-    // lightningPackage in its store, which reads as 'lnd', so it carries on
-    // exactly as before. The backend changes are in the image: the price
-    // cleanup on the BLAKE2b chain runs there, once, keyed on its own database
-    // state.
+    // Nothing to migrate. The new version floor is a dependency requirement,
+    // checked by StartOS, and the file models only stopped dropping keys they
+    // do not model, which needs nothing done to existing files.
     up: async ({ effects }) => {},
     down: IMPOSSIBLE,
   },
