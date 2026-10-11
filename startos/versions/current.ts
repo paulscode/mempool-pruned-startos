@@ -1,17 +1,15 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
-const notes = `The Bitcoin node must be a recent enough revision, and each setting now describes its options.
+const notes = `Bitcoin Knots (pre-RDTS) 29.3:28 is accepted again, so Mempool Pruned works on StartOS 0.4.0.1 with that node.
 
-If Select Node is on Bitcoin Knots, that node must be at least 28.4:29, 29.4:16, 30.3:16 or 31.1:16, depending on its version line, or 29.3:29 for Bitcoin Knots (pre-RDTS). Those revisions fix two faults in the node's RPC proxy, each of which stopped the explorer until something was restarted. Some blocks mined in the months before SegWit activated could not be fetched from any peer, and fetching from peers is how the explorer reads every block a pruned node has discarded. And after the node restarted, the proxy kept refusing the explorer's login until the proxy itself was restarted. The two companion nodes must likewise be at least Bitcoin Knots (BLAKE2b) Companion 1.0.0:32 or Bitcoin Knots (pre-RDTS) Companion 29.3:29, which carry the same fixes; their current releases already do. A Bitcoin Knots build that declares none of these revisions is refused; for this chain's BLAKE2b node, select the Bitcoin Knots (BLAKE2b) Companion.
+3.3.1:40 required 29.3:29 for Bitcoin Knots (pre-RDTS). That version needs StartOS 0.4.0.2, so on StartOS 0.4.0.1 the newest you can install is 29.3:28, and Mempool Pruned 3.3.1:40 reported its Bitcoin dependency as unmet. If that happened to you, this update clears it; nothing else needs doing.
 
-Select Indexer, Enable Lightning and Indexing and Performance now list each of their options and what it does. The Spanish, German, Polish and French text has its accented letters back.
+29.3:28 still ships the older RPC proxy, with two known faults. Some blocks mined in the months before SegWit activated cannot be fetched from peers, which matters only if the explorer or its indexer needs one of those blocks from a pruned node. And if the node restarts on its own, the proxy refuses the explorer's login until the Bitcoin service is restarted. Both were present before 3.3.1:40 as well. To be rid of them, update StartOS to 0.4.0.2 and then Bitcoin Knots (pre-RDTS) to 29.3:29.
 
-A key added to the configuration file by hand is now kept when the package rewrites the file, even if the package does not know that key.
-
-Nothing you have set changes and no reindex is needed.`
+Nothing changes for Bitcoin Core, Bitcoin Knots, or the two companion nodes, and no reindex is needed.`
 
 export const current = VersionInfo.of({
-  version: '3.3.1:40',
+  version: '3.3.1:41',
   releaseNotes: {
     en_US: notes,
     es_ES: notes,
@@ -20,9 +18,7 @@ export const current = VersionInfo.of({
     fr_FR: notes,
   },
   migrations: {
-    // Nothing to migrate. The new version floor is a dependency requirement,
-    // checked by StartOS, and the file models only stopped dropping keys they
-    // do not model, which needs nothing done to existing files.
+    // Nothing to migrate: only a dependency range changed, which StartOS checks.
     up: async ({ effects }) => {},
     down: IMPOSSIBLE,
   },

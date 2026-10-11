@@ -129,11 +129,21 @@ export const versionRange: Record<BackendId, string> = {
   //
   // The last term is Start9-Community's Bitcoin Knots pre-RDTS package, which
   // ships under the `bitcoind` id as `#knotsprerdts:29.3:N`. Its `satisfies`
-  // list stops at 29.4:15, below the new floor, so upstream names its flavor
+  // list stops at 29.4:15, below the floors above, so the term names its flavor
   // directly. The `knots-prerdts` companion below is a different package with
   // an id of its own, and this term does not reach it.
+  //
+  // HELD AT 29.3:28, NOT UPSTREAM'S 29.3:29, ON PURPOSE. No pre-RDTS build with the
+  // fixed proxy exists for StartOS 0.4.0.1: 29.3:28 ships btc-rpc-proxy v0.8.0, and
+  // 29.3:29 was published twice under the same number, first as an SDK 2.0.9 build
+  // still on v0.8.0 (2026-09-25) and then, from 2026-10-07, as an SDK 3.0.3 build on
+  // v0.8.1 that requires StartOS 0.4.0.2. So the :29 floor guaranteed nothing on
+  // 0.4.0.1 and only stranded users there, which is what 3.3.1:40 did. :28 is the
+  // newest pre-RDTS build a 0.4.0.1 server can install. Start9's own Bitcoin Core and
+  // Knots floor builds (28.4:29, 29.4:16, ...) are SDK 2.0.9 with v0.8.1 and still
+  // served, so those floors stay.
   bitcoind:
-    '(>=28.4:29 && <29) || (>=29.4:16 && <30) || (>=30.3:16 && <31) || >=31.1:16 || >=#knotsprerdts:29.3:29',
+    '(>=28.4:29 && <29) || (>=29.4:16 && <30) || (>=30.3:16 && <31) || >=31.1:16 || >=#knotsprerdts:29.3:28',
   // The companions' floors are the first revisions carrying the same two proxy
   // fixes as the bitcoind floor above: knots-prerdts #knotsprerdts:29.3:29 and
   // knots-blake2b 1.0.0:32.
