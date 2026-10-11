@@ -9,9 +9,9 @@ const { InputSpec, Value } = sdk
 /**
  * Which bitcoind flavor this Mempool runs against.
  *
- * The manifest declares all four as optional dependencies and `dependencies.ts`
- * returns exactly one as required, so the UI shows a single node dependency and
- * does not nag about the flavors the user is not running.
+ * `dependencies.ts` declares each as an optional dependency and enables exactly
+ * one, so the UI shows a single node dependency and does not nag about the
+ * flavors the user is not running.
  */
 const backendInputSpec = InputSpec.of({
   backend: Value.select({

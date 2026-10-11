@@ -172,7 +172,6 @@ export const main = sdk.setupMain(async ({ effects }) => {
           subpath: null,
           mountpoint: lndMountpoint,
           readonly: true,
-          type: 'directory',
         })
         break
       case 'cln':
@@ -182,7 +181,6 @@ export const main = sdk.setupMain(async ({ effects }) => {
           subpath: 'bitcoin',
           mountpoint: clnMountpoint,
           readonly: true,
-          type: 'directory',
         })
         break
       default:

@@ -1,14 +1,5 @@
 import { setupManifest } from '@start9labs/start-sdk'
-import {
-  bitcoindDescription,
-  clnDescription,
-  electrsDescription,
-  fulcrumDescription,
-  lndDescription,
-  long,
-  short,
-  torDescription,
-} from './i18n'
+import { long, short } from './i18n'
 
 export const manifest = setupManifest({
   id: 'mempool-pruned',
@@ -19,9 +10,10 @@ export const manifest = setupManifest({
   marketingUrl: 'https://mempool.space',
   donationUrl: 'https://mempool.space/sponsor',
   description: { short, long },
-  // StartOS 0.4.0.2, not the SDK's default 0.4.0-beta.10, so the registry hides
-  // this release from 0.4.0.1 servers. Its Bitcoin Knots (pre-RDTS) floor, 29.3:29,
-  // cannot be installed there; 3.3.1:41 serves them. See `backends.ts`.
+  // StartOS 0.4.0.2, so the registry hides this release from 0.4.0.1 servers. Its
+  // Bitcoin Knots (pre-RDTS) floor, 29.3:29, cannot be installed there; 3.3.1:41
+  // serves them. See `backends.ts`. SDK 3 defaults to 0.4.0.2 anyway; this stays
+  // explicit so the reason is written down.
   osVersion: '0.4.0.2',
   volumes: ['main', 'cache', 'db', 'config', 'startos'],
   images: {
@@ -42,91 +34,6 @@ export const manifest = setupManifest({
         dockerTag: 'mariadb:10.4.34',
       },
       arch: ['x86_64', 'aarch64'],
-    },
-  },
-  dependencies: {
-    // Every flavor is optional here and exactly one is returned as required
-    // from dependencies.ts, chosen by the user. Declaring bitcoind mandatory
-    // would demand the official package of someone running a companion node.
-    bitcoind: {
-      description: bitcoindDescription,
-      optional: true,
-      metadata: {
-        title: 'Bitcoin Knots',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/bitcoin-core-startos/refs/heads/30.x/dep-icon.svg',
-      },
-    },
-    'knots-prerdts': {
-      description: bitcoindDescription,
-      optional: true,
-      metadata: {
-        title: 'Bitcoin Knots (SHA256) Companion',
-        icon: 'https://raw.githubusercontent.com/paulscode/knots-prerdts-startos/main/dep-icon.png',
-      },
-    },
-    'knots-blake2b': {
-      description: bitcoindDescription,
-      optional: true,
-      metadata: {
-        title: 'Bitcoin Knots (BLAKE2b) Companion',
-        icon: 'https://raw.githubusercontent.com/paulscode/knots-blake2b-startos/main/dep-icon.png',
-      },
-    },
-    electrs: {
-      description: electrsDescription,
-      optional: true,
-      metadata: {
-        title: 'Electrs',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/electrs-startos/refs/heads/master/icon.svg',
-      },
-    },
-    'electrs-pruned': {
-      description: electrsDescription,
-      optional: true,
-      metadata: {
-        title: 'Electrs Pruned',
-        icon: 'https://raw.githubusercontent.com/paulscode/electrs-pruned-startos/master/dep-icon.png',
-      },
-    },
-    fulcrum: {
-      description: fulcrumDescription,
-      optional: true,
-      metadata: {
-        title: 'Fulcrum',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/fulcrum-startos/master/icon.png',
-      },
-    },
-    'lightning-fork': {
-      description: lndDescription,
-      optional: true,
-      metadata: {
-        title: 'Lightning Fork',
-        icon: 'https://raw.githubusercontent.com/paulscode/lightning-fork-startos/master/icon.png',
-      },
-    },
-    'c-lightning': {
-      description: clnDescription,
-      optional: true,
-      metadata: {
-        title: 'Core Lightning',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/cln-startos/refs/heads/master/icon.svg',
-      },
-    },
-    lnd: {
-      description: lndDescription,
-      optional: true,
-      metadata: {
-        title: 'LND',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/lnd-startos/refs/heads/master/icon.svg',
-      },
-    },
-    tor: {
-      description: torDescription,
-      optional: true,
-      metadata: {
-        title: 'Tor',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/tor-startos/65faea17febc739d910e8c26ff4e61f6333487a8/icon.svg',
-      },
     },
   },
 })

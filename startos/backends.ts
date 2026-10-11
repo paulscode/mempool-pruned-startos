@@ -69,10 +69,10 @@ const officialEndpoints: Endpoints = {
 /**
  * The bitcoind flavors this package can run against.
  *
- * All four are declared as optional dependencies in the manifest and exactly one
- * is returned as required from `dependencies.ts`, chosen by the user. The SDK
- * evaluates `setupDependencies` at runtime, so a conditional requirement is a
- * supported shape rather than a trick.
+ * Each is declared as an optional dependency in `dependencies.ts`, and exactly
+ * one is enabled, chosen by the user. The SDK evaluates each `enabled` at
+ * runtime, so a conditional requirement is a supported shape rather than a
+ * trick.
  */
 export const backends = {
   bitcoind: {

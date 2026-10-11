@@ -22,9 +22,8 @@ const indexerInputSpec = InputSpec.of({
       none: i18n('None — address lookups disabled'),
     },
     // Nothing preselected, so closing the form without choosing does not read
-    // as a choice already made. The spec accepts null; only the SDK 2.0.9
-    // builder signature does not.
-    default: null as any,
+    // as a choice already made.
+    default: null,
   }),
 })
 
