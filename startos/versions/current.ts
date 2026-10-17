@@ -3,8 +3,11 @@ import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 const notes = `Rebuilt on version 3 of the StartOS packaging SDK, which needs StartOS 0.4.0.2. Nothing you have set changes.
 
 The backend no longer keeps every replacement (RBF) event in memory for as long as it runs.
+
 The backend's dependencies are updated to fix published security advisories, including a denial of service in its WebSocket library.
+
 Mempool starts sooner once its database is ready, instead of waiting up to 30 seconds for the next check.
+
 Retropex's BLAKE2b build of Bitcoin Knots (29.4.2:4 or later) is accepted as the Bitcoin node again. On a pruned Retropex node, its stock RPC proxy can still stall Mempool, so an unpruned node is the safe choice there.`
 
 export const current = VersionInfo.of({
