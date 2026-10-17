@@ -19,13 +19,13 @@ export const manifest = setupManifest({
   images: {
     frontend: {
       source: {
-        dockerTag: 'ghcr.io/paulscode/mempool-pruned-frontend:v3.3.1-pruned.8',
+        dockerTag: 'ghcr.io/paulscode/mempool-pruned-frontend:v3.3.1-pruned.9',
       },
       arch: ['x86_64', 'aarch64'],
     },
     backend: {
       source: {
-        dockerTag: 'ghcr.io/paulscode/mempool-pruned-backend:v3.3.1-pruned.8',
+        dockerTag: 'ghcr.io/paulscode/mempool-pruned-backend:v3.3.1-pruned.9',
       },
       arch: ['x86_64', 'aarch64'],
     },
