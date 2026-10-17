@@ -144,8 +144,32 @@ export const versionRange: Record<BackendId, string> = {
   // v0.8.0 and passes, as the two builds cannot be told apart. Start9's own
   // Bitcoin Core and Knots floor builds (28.4:29, 29.4:16, ...) are SDK 2.0.9 with
   // v0.8.1, so those floors never had this problem.
+  //
+  // The final term is Retropex's BLAKE2b Knots (Retropex/knots-startos), the
+  // package most people run on the BLAKE2b chain. It took the official
+  // `bitcoind` id, and its versions are flavored `#knots:29.4.2:N`, so the
+  // unflavored terms above never match it. Until 2026-09-04 it was accepted
+  // through its `satisfies` list; commit 20ab287 ("no longer satisfy core")
+  // removed that list, and every release since fails this range unless it is
+  // named here. The floor is the current release, 29.4.2:4 (tag
+  // v29.4.2.knots20260508-1). Checked with the SDK's comparator:
+  //   #knots:29.4.2:4 vs this range => true
+  //   #knots:29.4.2:3 vs this range => false
+  //   #knots:29.4:8   vs this range => false (Start9's old SHA256 Knots; its
+  //                                    satisfies list, 29.4:13 and 28.4:26, is
+  //                                    below the floors above)
+  //
+  // It does not carry the proxy fixes the other floors require. 29.4.2:4 ships
+  // the stock ghcr.io/start9labs/btc-rpc-proxy:v0.8.0, and that package runs the
+  // proxy only when pruning. An archival Retropex node works: Mempool talks to
+  // bitcoind directly. A pruned one hits the old proxy faults: the cookie read
+  // once (401 from the node's next restart until the proxy restarts), old blocks
+  // with an unbacked witness commitment refused by every peer, and, because no
+  // upstream proxy release parses a 164-byte header, every verbose call on a
+  // BLAKE2b block. It is accepted anyway: refusing it does not help archival
+  // users, and pruned users have no fixed Retropex build to move to.
   bitcoind:
-    '(>=28.4:29 && <29) || (>=29.4:16 && <30) || (>=30.3:16 && <31) || >=31.1:16 || >=#knotsprerdts:29.3:29',
+    '(>=28.4:29 && <29) || (>=29.4:16 && <30) || (>=30.3:16 && <31) || >=31.1:16 || >=#knotsprerdts:29.3:29 || >=#knots:29.4.2:4',
   // The companions' floors are the first revisions carrying the same two proxy
   // fixes as the bitcoind floor above: knots-prerdts #knotsprerdts:29.3:29 and
   // knots-blake2b 1.0.0:32.
