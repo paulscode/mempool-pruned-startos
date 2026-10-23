@@ -6,6 +6,8 @@ The backend no longer trusts certificates issued under the compromised eMudhra c
 
 A request asking the backend to evaluate a transaction with thousands of inputs and outputs is now refused instead of tying up the backend.
 
+The mining pools list recognizes one more pool address.
+
 Nothing you have set changes, and no reindex is needed.`
 
 export const current = VersionInfo.of({
