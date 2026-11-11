@@ -1,18 +1,19 @@
 <p align="center">
-  <img src="icon.svg" alt="Mempool Logo" width="21%">
+  <img src="icon.png" alt="Mempool Logo" width="21%">
 </p>
 
-# Mempool on StartOS
+# Mempool Pruned on StartOS
 
 > Everything not listed in this document should behave the same as upstream
-> Mempool. If a feature, setting, or behavior is not mentioned here, the
+> Mempool, as built from the fork this package ships. If a feature, setting, or behavior is not mentioned here, the
 > upstream documentation is accurate and fully applicable — see the
 > Documentation section of `instructions.md` for links.
 
-[Mempool](https://github.com/mempool/mempool) is a mempool visualizer, block explorer, and fee-market API. On StartOS it runs entirely against your own Bitcoin node and your own Electrum indexer, with every external data source that upstream reaches for either disabled or optional.
+[Mempool](https://github.com/mempool/mempool) is a mempool visualizer, block explorer, and fee-market API. On StartOS it runs entirely against your own Bitcoin node and your own Electrum indexer, with every external data source that upstream reaches for either disabled or optional. This package ships a fork of it that works against a pruned node, on either the SHA256 or the BLAKE2b chain.
 
 - **Upstream repo:** <https://github.com/mempool/mempool>
-- **Wrapper repo:** <https://github.com/Start9Labs/mempool-startos>
+- **Fork the images are built from:** <https://github.com/paulscode/mempool-pruned>
+- **Wrapper repo:** <https://github.com/paulscode/mempool-pruned-startos>, forked from <https://github.com/Start9Labs/mempool-startos>
 
 ---
 
@@ -28,8 +29,9 @@ That is the quickest route, and it is the one to use unless you have a reason to
 build. Installing from the registry gets the signed release; building from source
 gets whatever is in the working tree, which is not the same thing.
 
-It needs `electrs-pruned`, which is published here, and a Bitcoin node, which may
-come from Start9's own registry or from this one.
+Against a pruned node it needs `electrs-pruned` or `fulcrum-pruned`, both
+published here, and a Bitcoin node, which may come from Start9's own registry or
+from this one.
 
 ## Table of Contents
 
@@ -50,12 +52,12 @@ come from Start9's own registry or from this one.
 
 ## Image and Container Runtime
 
-Three upstream images, unmodified, run as four daemons in a fixed order.
+Three images run as four daemons in a fixed order. The frontend and backend are built from the fork by its `publish-pruned-images.yml` workflow and tagged `v<upstream>-pruned.<n>`; MariaDB is the upstream library image.
 
-| Property      | Value                                            |
-| ------------- | ------------------------------------------------ |
-| Images        | `mempool/frontend`, `mempool/backend`, `mariadb` |
-| Architectures | x86_64, aarch64                                  |
+| Property      | Value                                                                                              |
+| ------------- | -------------------------------------------------------------------------------------------------- |
+| Images        | `ghcr.io/paulscode/mempool-pruned-frontend`, `ghcr.io/paulscode/mempool-pruned-backend`, `mariadb` |
+| Architectures | x86_64, aarch64                                                                                    |
 
 | Subcontainer          | Daemon    | Starts after       | Purpose                                       |
 | --------------------- | --------- | ------------------ | --------------------------------------------- |
@@ -89,12 +91,12 @@ Five volumes are declared and four carry data.
 
 Two models: upstream's configuration file, and a small store for state that has no place in it.
 
-| File                  | Volume    | Format | Modelled                | Written by                             |
-| --------------------- | --------- | ------ | ----------------------- | -------------------------------------- |
-| `mempool-config.json` | `config`  | JSON   | Yes — `FileHelper.json` | Install, every init, and three actions |
-| `store.json`          | `startos` | JSON   | Yes — `FileHelper.json` | The Select Indexer and Tor actions     |
+| File                  | Volume    | Format | Modelled                | Written by                                            |
+| --------------------- | --------- | ------ | ----------------------- | ----------------------------------------------------- |
+| `mempool-config.json` | `config`  | JSON   | Yes — `FileHelper.json` | Install, every init, and three actions                |
+| `store.json`          | `startos` | JSON   | Yes — `FileHelper.json` | Select Node, Select Indexer, Enable Lightning and Tor |
 
-`store.json` holds which Electrum indexer you selected and whether external requests should go over Tor. Both are StartOS state — intent, and the discriminator that decides which optional dependencies exist — and deliberately not part of upstream's file. The addresses that intent resolves to are written into `mempool-config.json` instead, which is what lets the Tor proxy be switched off when Tor is uninstalled without forgetting that you asked for it.
+`store.json` holds which Bitcoin node and which Electrum indexer you selected, which package serves LND's API when Lightning is on, and whether external requests should go over Tor. All are StartOS state — intent, and the discriminator that decides which optional dependencies exist — and deliberately not part of upstream's file. The addresses that intent resolves to are written into `mempool-config.json` instead, which is what lets the Tor proxy be switched off when Tor is uninstalled without forgetting that you asked for it.
 
 Within `mempool-config.json`:
 
@@ -106,7 +108,7 @@ Within `mempool-config.json`:
 
 **Yours** — everything else, including the whole `EXTERNAL_DATA_SERVER` section and the fiat-price settings. Those are seeded with upstream's own values and never re-asserted, so a hand edit survives. Both models are built with `z.looseObject`, so a key neither of them knows about also survives a write rather than being dropped.
 
-Two defaults depart from upstream's:
+Four defaults depart from upstream's:
 
 | Key                                              | Here               | Upstream in-source | Why                                                                                                                                         |
 | ------------------------------------------------ | ------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -123,14 +125,14 @@ Bitcoin is required; the rest are chosen, and each choice changes which dependen
 
 The selected node's minimum versions are in `backends.ts`. The `bitcoind` entry takes upstream's floors for Bitcoin Core and Knots: 28.4:29, 29.4:16, 30.3:16 or 31.1:16 depending on the line. Those are the revisions that ship btc-rpc-proxy v0.8.1, which fixes a pruned block that no peer would serve and a proxy that answered 401 from the node's next restart onwards. For Start9-Community's Bitcoin Knots (pre-RDTS) it takes upstream's `#knotsprerdts:29.3:29`, which requires StartOS 0.4.0.2. This package therefore declares `osVersion` 0.4.0.2, and the registry hides it from 0.4.0.1 servers. Those servers stay on 3.3.1:41, which accepts `:28`, the newest pre-RDTS build they can install (see the comment in `backends.ts`). The two companions are held to their first revisions with the same fixes: `knots-blake2b` 1.0.0:32 and `knots-prerdts` `#knotsprerdts:29.3:29` (flavored, so it matches that package's own versions rather than its `satisfies` list). Retropex's BLAKE2b Knots, which took the `bitcoind` id and stopped declaring a `satisfies` list on 2026-09-04, is named directly as `#knots:29.4.2:4`. It ships stock btc-rpc-proxy v0.8.0, so an archival Retropex node works and a pruned one hits the faults the other floors exist to avoid.
 
-| Dependency                                  | Kind      | Required                                                 | Health checks                       |
-| ------------------------------------------- | --------- | -------------------------------------------------------- | ----------------------------------- |
-| The selected node                           | `running` | Always                                                   | Per backend, see `backends.ts`      |
-| `fulcrum`, `electrs` _or_ `electrs-pruned`  | `running` | Whichever the indexer action selects; none with **None** | The indexer's ready and sync checks |
-| `lnd`, `lightning-fork` _or_ `c-lightning`  | `running` | Only with Lightning enabled                              | The node's ready and sync checks    |
-| `tor`                                       | `running` | Only with the Tor proxy enabled                          | `tor`                               |
+| Dependency                                                   | Kind      | Required                                                 | Health checks                       |
+| ------------------------------------------------------------ | --------- | -------------------------------------------------------- | ----------------------------------- |
+| The selected node                                            | `running` | Always                                                   | Per backend, see `backends.ts`      |
+| `fulcrum`, `electrs`, `electrs-pruned` _or_ `fulcrum-pruned` | `running` | Whichever the indexer action selects; none with **None** | The indexer's ready and sync checks |
+| `lnd`, `lightning-fork` _or_ `c-lightning`                   | `running` | Only with Lightning enabled                              | The node's ready and sync checks    |
+| `tor`                                                        | `running` | Only with the Tor proxy enabled                          | `tor`                               |
 
-**Bitcoin may stay pruned.** Upstream raises a re-raising `critical` task against Bitcoin demanding `prune=0` and `txindex=true`; this package raises none, because the fork it ships resolves confirmed transactions through Electrum rather than `getrawtransaction`. Address lookups still need an Electrum indexer, which is what the indexer selection is for, and against a pruned node that indexer has to be one that tolerates pruning.
+**Bitcoin may stay pruned.** Upstream raises a re-raising `critical` task against Bitcoin demanding `prune=0` and `txindex=true`; this package raises none, because the fork it ships resolves confirmed transactions through Electrum rather than `getrawtransaction`. Address lookups still need an Electrum indexer, which is what the indexer selection is for, and against a pruned node that indexer has to be one that tolerates pruning: Electrs Pruned or Fulcrum Pruned.
 
 Bitcoin's data directory is mounted read-only so the backend can read its RPC cookie; the chosen Lightning node's is mounted read-only for LND's macaroon and certificate, or Core Lightning's RPC socket. No credential is stored in this package.
 
@@ -148,17 +150,27 @@ The port is bound on the `main` MultiHost and is not masked. Other packages reso
 
 ## Installation and First-Run Flow
 
-Install generates the database password and raises two `critical` tasks: choose an indexer, and configure Bitcoin for archival mode with transaction indexing. Nothing else is required, and no credential is shown — Mempool has no accounts.
+Install generates the database password and raises one `critical` task: choose an indexer. The node defaults to the `bitcoind` package; run Select Node first if yours is one of the companions. Nothing else is required, and no credential is shown — Mempool has no accounts.
 
 The order that matters: Bitcoin must be synced, and the indexer must have finished its own initial index, before Mempool shows a complete picture. Until then the API is up but blocks and addresses are missing. Mempool itself has no separate sync of its own to wait for unless you enable indexing.
 
 ## Actions
 
-Five actions, all user-facing.
+Six actions, all user-facing.
+
+### Select Node
+
+Chooses which Bitcoin package the explorer reads: **Bitcoin Knots** (the `bitcoind` id, which Bitcoin Core, Knots and the builds sideloaded over that id all share), the **Bitcoin Knots (SHA256) Companion** (`knots-prerdts`), or the **Bitcoin Knots (BLAKE2b) Companion** (`knots-blake2b`). The default is `bitcoind`.
+
+- **What it changes:** `backend` in `store.json`, and through it which node is the package's dependency, whose volume is mounted for the RPC cookie, and which address init writes into `CORE_RPC`.
+- **Cost:** seconds, then a restart.
+- **Repeat safety:** idempotent as a write, but **switching nodes can switch chains.** The database was built against the chain it was indexing, so run Clear Backend Cache after a switch.
+- **It refuses the SHA256 Companion while Lightning is set to Lightning Fork**, which follows the BLAKE2b chain; Enable Lightning refuses the reverse.
+- The chain itself is not a setting. The backend identifies it from the node (block 961640's hash) and applies the BLAKE2b-specific behaviour, such as prices, only there.
 
 ### Select Indexer
 
-Chooses which Electrum server backs address lookups — Fulcrum, Electrs, Electrs Pruned, or **None**. Nothing is preselected; the form cannot be submitted until you pick one.
+Chooses which Electrum server backs address lookups — Fulcrum, Electrs, Electrs Pruned, Fulcrum Pruned, or **None**. Nothing is preselected; the form cannot be submitted until you pick one. Fulcrum and Electrs need an archival node; Electrs Pruned and Fulcrum Pruned work with a pruned one, because each can fetch blocks the node has already discarded.
 
 - **What it changes:** `indexer` in `store.json`, and through it the package's optional dependency. The address itself is resolved by init on the next start.
 - **Cost:** seconds, then a restart.
@@ -170,7 +182,7 @@ Chooses which Electrum server backs address lookups — Fulcrum, Electrs, Electr
 
 Selects the Lightning node whose network data fills the Lightning tab, or turns the tab off.
 
-- **What it changes:** the `LIGHTNING` section, plus the paths for whichever node was picked; the frontend also gets `LIGHTNING=true`.
+- **What it changes:** the `LIGHTNING` section, plus the paths for whichever node was picked, and `lightningPackage` in `store.json` (Start9's LND or Lightning Fork, which serve the same API); the frontend also gets `LIGHTNING=true`.
 - **Cost:** seconds, then a restart.
 - **Repeat safety:** idempotent, and nothing is deleted when it is switched off.
 - **This is the memory-hungry option.** Lightning graph data is large; on a device under 12 GiB the form warns before you commit.
@@ -260,8 +272,8 @@ Only configuration is backed up — `sdk.Backups.ofVolumes('config', 'startos')`
 ## Quick Reference for AI Consumers
 
 ```yaml
-package_id: mempool
-image: mempool/backend # plus mempool/frontend and mariadb
+package_id: mempool-pruned
+image: ghcr.io/paulscode/mempool-pruned-backend # plus mempool-pruned-frontend and mariadb
 architectures:
   - x86_64
   - aarch64
@@ -291,9 +303,10 @@ startos_managed_env_vars:
   - LIGHTNING # frontend, only when a Lightning node is selected
 dependencies:
   - <selected node> # required, running; the picklist in backends.ts
-  - fulcrum # or electrs or electrs-pruned; whichever the indexer action selects
+  - fulcrum # or electrs, electrs-pruned or fulcrum-pruned; whichever the indexer action selects
   - electrs
   - electrs-pruned
+  - fulcrum-pruned
   - lnd # or lightning-fork or c-lightning; only with Lightning enabled
   - lightning-fork
   - c-lightning
@@ -301,6 +314,7 @@ dependencies:
 interfaces:
   webui: { type: ui, port: 8080 }
 actions:
+  - select-backend # shown as Select Node
   - select-indexer
   - enable-lightning
   - indexing-and-performance

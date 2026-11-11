@@ -1,18 +1,21 @@
 # Updating the upstream version
 
-Mempool ships as two upstream containers (frontend and backend) that share a release tag and must move together, plus a MariaDB sidecar that tracks its own release line.
+Mempool ships as two containers (frontend and backend) built from this package's fork of Mempool, which share a release tag and must move together, plus a MariaDB sidecar that tracks its own release line.
+
+The fork is [`paulscode/mempool-pruned`](https://github.com/paulscode/mempool-pruned): upstream Mempool plus the changes that let it run against a pruned node and on the BLAKE2b chain. Upstream's own `mempool/frontend` and `mempool/backend` images do not work here, so a version bump is a change to the fork first and to this package second.
 
 ## Determining the upstream version
 
 ### Mempool (frontend + backend)
 
-Both Mempool images are built from a single source repo — [`mempool/mempool`](https://github.com/mempool/mempool) — and are tagged together. Check the latest GitHub release:
+Check the latest upstream release, and what the fork is on:
 
 ```sh
 gh release view -R mempool/mempool --json tagName -q .tagName
+git -C <fork checkout> tag --list 'v*-pruned.*' --sort=-v:refname | head -3
 ```
 
-The current pins live in `startos/manifest/index.ts` at `images.frontend.source.dockerTag` and `images.backend.source.dockerTag`. They are always the same tag and are bumped in lockstep.
+The current pins live in `startos/manifest/index.ts` at `images.frontend.source.dockerTag` and `images.backend.source.dockerTag`. They are always the same tag, `v<upstream>-pruned.<n>`, and are bumped in lockstep. `<n>` restarts at 1 for each upstream version and counts the fork's own releases on top of it.
 
 ### MariaDB
 
@@ -28,10 +31,13 @@ The current pin lives in `startos/manifest/index.ts` at `images.mariadb.source.d
 
 ### Mempool (frontend + backend)
 
-In `startos/manifest/index.ts`, set both tags to the new Mempool release (same value in both places):
+1. In the fork, merge the upstream release tag into a new `release/v<upstream>-pruned.1` branch (or, for a fork-only change, branch from the last release and raise `<n>`). The fork's changes are few and each commit message says why it exists; resolve conflicts with that in hand.
+2. Tag the result `v<upstream>-pruned.<n>` and push the tag to the fork. Its `publish-pruned-images.yml` workflow builds both images for amd64 and arm64 and pushes them to `ghcr.io/paulscode/mempool-pruned-frontend` and `ghcr.io/paulscode/mempool-pruned-backend`. Wait for it to finish.
+3. In `startos/manifest/index.ts`, set both tags to it (same value in both places):
+   - `images.frontend.source.dockerTag` → `ghcr.io/paulscode/mempool-pruned-frontend:v<upstream>-pruned.<n>`
+   - `images.backend.source.dockerTag` → `ghcr.io/paulscode/mempool-pruned-backend:v<upstream>-pruned.<n>`
 
-- `images.frontend.source.dockerTag` → `mempool/frontend:v<new version>`
-- `images.backend.source.dockerTag` → `mempool/backend:v<new version>`
+4. The Umbrel app in `paulscode/umbrel-store` pins the same two images by digest; move it to the new tag too.
 
 Then [refresh the bundled mining pool snapshot](#refreshing-the-bundled-mining-pool-snapshot) — nothing derives it from the image tags, so it moves only when someone moves it.
 
@@ -65,3 +71,12 @@ axiosOptions.httpsAgent = new SocksProxyAgent(socksOptions)
 Axios picks `httpAgent` for an `http:` URL, so the loopback fetch is exempt from the proxy and keeps working with Tor egress enabled. If a release adds `httpAgent` alongside it — `sync-assets.ts` already sets both — then a fresh install with the Tor action on would try to reach `127.0.0.1` through Tor, fail, and crash-loop on the missing sha. Serving the snapshot over TLS is the fix if that day comes.
 
 A refreshed snapshot only reaches installs whose database has no `pools_json_sha` yet — a fresh install or a restore. Upstream's `AUTOMATIC_POOLS_UPDATE` is off, so an install that already imported pool data logs that an update is available and keeps what it has.
+
+## Cutting a release of this package
+
+1. Move the old `startos/versions/current.ts` to `startos/versions/v<old>.ts`, list it under `other` in `startos/versions/index.ts`, and write the new `current.ts` with its notes and any migration. A released version keeps its file even when its migration is empty, for the notes.
+2. From the workspace root, `./release.sh mempool-pruned-startos` builds the universal s9pk into `builds/<dotted version>/` beside an unsigned `SHA256SUMS`. It refuses a tree that differs from HEAD.
+3. Sign `SHA256SUMS` on the air-gapped machine and put `SHA256SUMS.asc` beside it.
+4. `./release.sh mempool-pruned-startos --publish` pushes the branch and cuts the GitHub release `v<dotted version>`. Then publish to the registry from its own repository.
+
+GitHub Actions only type-checks (`.github/workflows/check.yml`); nothing is built or released there.
