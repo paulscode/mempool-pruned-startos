@@ -1,0 +1,20 @@
+name: check
+# Type-check only. Releases are not built here: the workspace release.sh builds
+# the s9pk, SHA256SUMS is signed on an air-gapped machine, and
+# `release.sh --publish` cuts the GitHub Release (see UPDATING.md).
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2 (pinned by SHA)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0 (pinned by SHA)
+        with:
+          node-version: 22
+      # The lock file pins the sibling packages by commit over git+ssh, and a
+      # runner has no key. They are public, so fetch them over https instead.
+      - run: git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+      - run: npm ci --no-audit --no-fund
+      - run: npm run check
