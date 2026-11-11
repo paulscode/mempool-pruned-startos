@@ -1,17 +1,13 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
-const notes = `Mempool 3.3.2. The backend now runs on Node.js 26.12.1, which fixes the Node.js security issues published on 21 October 2026, among them a remote code execution flaw in its Brotli decoder and two ways to get past TLS hostname checks.
+const notes = `Fulcrum Pruned can now be chosen under Select Indexer. Like Electrs Pruned, it works with a pruned node, because it can fetch the blocks your node has already discarded.
 
-The backend no longer trusts certificates issued under the compromised eMudhra certificate authorities, in either Node.js's own list or the system's.
+Select Indexer no longer marks Fulcrum as recommended, and says which indexers need an archival node (Fulcrum and Electrs) and which work with a pruned one (Electrs Pruned and Fulcrum Pruned).
 
-A request asking the backend to evaluate a transaction with thousands of inputs and outputs is now refused instead of tying up the backend.
-
-The mining pools list recognizes one more pool address.
-
-Nothing you have set changes, and no reindex is needed.`
+Nothing you have set changes, and no reindex is needed. To switch, install Fulcrum Pruned, let it finish indexing, then run Select Indexer.`
 
 export const current = VersionInfo.of({
-  version: '3.3.2:0',
+  version: '3.3.2:1',
   releaseNotes: {
     en_US: notes,
     es_ES: notes,
@@ -20,7 +16,8 @@ export const current = VersionInfo.of({
     fr_FR: notes,
   },
   migrations: {
-    // Nothing to migrate: only the images changed.
+    // Nothing to migrate: a fifth indexer choice is one more value the stored
+    // setting may take, and no install holds it yet.
     up: async ({ effects }) => {},
     down: IMPOSSIBLE,
   },
