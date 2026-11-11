@@ -11,3 +11,5 @@ ncc-cache
 # sibling package ignores this. Without it a `git add -A` after a build sweeps the
 # checksums in, which is how builds/3.3.1.24 through .34 came to be tracked.
 builds/
+# Local planning notes, kept out of the repo on purpose.
+internal_docs/
