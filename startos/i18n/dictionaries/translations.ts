@@ -8,6 +8,11 @@ import { LangDict } from './default'
 // with upstream's translations. 84 and 85 are upstream's option lists plus this
 // fork's options; their shared lines are upstream's translations. The entries
 // they replace stay where they are, because an index is never reused.
+//
+// 89 to 91 came with Fulcrum Pruned. 89 is Fulcrum without upstream's
+// "(recommended)", 90 is this fork's label and stays English like 77, and 91
+// is 84 with a line for Fulcrum Pruned and the archival-node notes; its shared
+// lines are 84's translations.
 
 export default {
   es_ES: {
@@ -95,6 +100,9 @@ export default {
     86: '- Bajo consumo de CPU: consulta a Bitcoin cada 8 segundos y proyecta los 4 bloques siguientes. Es el que menos CPU usa.\n- Equilibrado: consulta cada 4 segundos y proyecta los 6 bloques siguientes.\n- Responsivo: consulta cada 2 segundos y proyecta los 8 bloques siguientes, como hace Mempool por defecto. Es el que más CPU usa.',
     87: 'Registra estadísticas del mempool, como transacciones y vbytes por segundo, en la base de datos para los gráficos de Mempool. Desactivarlo detiene esas escrituras periódicas en la base de datos, y los gráficos de estadísticas quedan sin datos.',
     88: '- Debug: todo, incluido el progreso por bloque de un llenado de indexación. Muy ruidoso; vuelva a Info cuando tenga lo que necesita.\n- Info: funcionamiento normal. El progreso del llenado no se muestra, así que el registro puede parecer inactivo mientras se ejecuta.\n- Advertencia: solo advertencias y errores.\n- Error: solo errores.',
+    89: 'Fulcrum',
+    90: 'Fulcrum Pruned (works with a pruned node)',
+    91: '- Fulcrum: Fulcrum, en este servidor, responde a las búsquedas de direcciones. Necesita un nodo de archivo.\n- Electrs: Electrs, en este servidor, responde a las búsquedas de direcciones. Necesita un nodo de archivo.\n- Electrs Pruned: Electrs Pruned, en este servidor, responde a las búsquedas de direcciones. Funciona con un nodo podado: puede indexar bloques que su nodo ya ha descartado.\n- Fulcrum Pruned: Fulcrum Pruned, en este servidor, responde a las búsquedas de direcciones. Funciona con un nodo podado de la misma manera.\n- Ninguno: la búsqueda de direcciones queda desactivada. Con un nodo podado también fallan las páginas de transacciones: las transacciones confirmadas se consultan entonces por RPC de Bitcoin, algo que un nodo podado no puede responder.\nEl indexador que elija debe estar instalado y en ejecución en este servidor.',
   },
   de_DE: {
     0: 'Mempool wird gestartet',
@@ -181,6 +189,9 @@ export default {
     86: '- Niedrige-CPU: fragt Bitcoin alle 8 Sekunden ab und projiziert die nächsten 4 Blöcke. Braucht am wenigsten CPU.\n- Ausgeglichen: fragt alle 4 Sekunden ab und projiziert die nächsten 6 Blöcke.\n- Reaktionsschnell: fragt alle 2 Sekunden ab und projiziert die nächsten 8 Blöcke, wie es das Original-Mempool standardmäßig tut. Braucht am meisten CPU.',
     87: 'Speichert Mempool-Statistiken wie Transaktionen und vBytes pro Sekunde in der Datenbank für die Diagramme von Mempool. Ausgeschaltet entfallen diese regelmäßigen Datenbank-Schreibvorgänge, und die Statistikdiagramme haben keine Daten.',
     88: '- Debug: alles, einschließlich des blockweisen Fortschritts eines Indexierungs-Abgleichs. Sehr laut; wechseln Sie zurück zu Info, sobald Sie haben, was Sie brauchen.\n- Info: normaler Betrieb. Der Abgleichfortschritt wird nicht angezeigt, daher kann das Protokoll während eines Abgleichs untätig wirken.\n- Warnung: nur Warnungen und Fehler.\n- Fehler: nur Fehler.',
+    89: 'Fulcrum',
+    90: 'Fulcrum Pruned (works with a pruned node)',
+    91: '- Fulcrum: Fulcrum auf diesem Server beantwortet Adressabfragen. Es benötigt einen Archivknoten.\n- Electrs: Electrs auf diesem Server beantwortet Adressabfragen. Es benötigt einen Archivknoten.\n- Electrs Pruned: Electrs Pruned auf diesem Server beantwortet Adressabfragen. Es funktioniert mit einem beschnittenen Knoten: Es kann Blöcke indexieren, die Ihr Knoten bereits verworfen hat.\n- Fulcrum Pruned: Fulcrum Pruned auf diesem Server beantwortet Adressabfragen. Es funktioniert auf dieselbe Weise mit einem beschnittenen Knoten.\n- Keiner: Die Adresssuche ist abgeschaltet. Bei einem beschnittenen Knoten fallen auch die Transaktionsseiten aus: Bestätigte Transaktionen werden dann über Bitcoin-RPC abgefragt, was ein beschnittener Knoten nicht beantworten kann.\nDer gewählte Indexer muss auf diesem Server installiert sein und laufen.',
   },
   pl_PL: {
     0: 'Uruchamianie Mempool',
@@ -267,6 +278,9 @@ export default {
     86: '- Niska-CPU: odpytuje Bitcoina co 8 sekund i prognozuje 4 kolejne bloki. Zużywa najmniej CPU.\n- Zbalansowany: odpytuje co 4 sekundy i prognozuje 6 kolejnych bloków.\n- Responsywny: odpytuje co 2 sekundy i prognozuje 8 kolejnych bloków, tak jak domyślnie robi to oryginalny Mempool. Zużywa najwięcej CPU.',
     87: 'Zapisuje w bazie danych statystyki mempoola, takie jak transakcje i vbajty na sekundę, na potrzeby wykresów Mempool. Wyłączenie zatrzymuje te okresowe zapisy do bazy danych, a wykresy statystyk pozostają bez danych.',
     88: '- Debug: wszystko, łącznie z postępem uzupełniania indeksowania dla poszczególnych bloków. Bardzo głośny; wróć do Info, gdy uzyskasz to, czego potrzebujesz.\n- Info: normalne działanie. Postęp uzupełniania jest ukryty, więc podczas uzupełniania dziennik może wyglądać na bezczynny.\n- Ostrzeżenie: tylko ostrzeżenia i błędy.\n- Błąd: tylko błędy.',
+    89: 'Fulcrum',
+    90: 'Fulcrum Pruned (works with a pruned node)',
+    91: '- Fulcrum: wyszukiwanie adresów obsługuje Fulcrum na tym serwerze. Wymaga węzła archiwalnego.\n- Electrs: wyszukiwanie adresów obsługuje Electrs na tym serwerze. Wymaga węzła archiwalnego.\n- Electrs Pruned: wyszukiwanie adresów obsługuje Electrs Pruned na tym serwerze. Działa z przyciętym węzłem: potrafi indeksować bloki, które Twój węzeł już odrzucił.\n- Fulcrum Pruned: wyszukiwanie adresów obsługuje Fulcrum Pruned na tym serwerze. Działa z przyciętym węzłem w ten sam sposób.\n- Brak: wyszukiwanie adresów jest wyłączone. Przy przyciętym węźle przestają działać także strony transakcji: potwierdzone transakcje są wtedy pobierane przez RPC Bitcoina, na co przycięty węzeł nie odpowie.\nWybrany indekser musi być zainstalowany i uruchomiony na tym serwerze.',
   },
   fr_FR: {
     0: 'Démarrage de Mempool',
@@ -353,5 +367,8 @@ export default {
     86: '- CPU réduit : interroge Bitcoin toutes les 8 secondes et projette les 4 prochains blocs. Utilise le moins de CPU.\n- Équilibré : interroge toutes les 4 secondes et projette les 6 prochains blocs.\n- Réactif : interroge toutes les 2 secondes et projette les 8 prochains blocs, comme Mempool le fait par défaut. Utilise le plus de CPU.',
     87: "Enregistre dans la base de données les statistiques du mempool, comme les transactions et les vbytes par seconde, pour les graphiques de Mempool. Le désactiver arrête ces écritures périodiques en base, et les graphiques de statistiques n'ont plus de données.",
     88: "- Debug : tout, y compris la progression bloc par bloc d'un remplissage d'indexation. Très verbeux ; revenez à Info une fois que vous avez ce qu'il vous faut.\n- Info : fonctionnement normal. La progression du remplissage est masquée, le journal peut donc sembler inactif pendant un remplissage.\n- Avertissement : uniquement les avertissements et les erreurs.\n- Erreur : uniquement les erreurs.",
+    89: 'Fulcrum',
+    90: 'Fulcrum Pruned (works with a pruned node)',
+    91: "- Fulcrum : Fulcrum, sur ce serveur, répond aux recherches d'adresses. Il nécessite un nœud d'archive.\n- Electrs : Electrs, sur ce serveur, répond aux recherches d'adresses. Il nécessite un nœud d'archive.\n- Electrs Pruned : Electrs Pruned, sur ce serveur, répond aux recherches d'adresses. Il fonctionne avec un nœud élagué : il peut indexer les blocs que votre nœud a déjà supprimés.\n- Fulcrum Pruned : Fulcrum Pruned, sur ce serveur, répond aux recherches d'adresses. Il fonctionne de la même manière avec un nœud élagué.\n- Aucun : la recherche d'adresses est désactivée. Avec un nœud élagué, les pages de transactions cessent aussi de fonctionner : les transactions confirmées sont alors récupérées via le RPC Bitcoin, ce qu'un nœud élagué ne peut pas fournir.\nL'indexeur choisi doit être installé et en cours d'exécution sur ce serveur.",
   },
 } satisfies Record<string, LangDict>

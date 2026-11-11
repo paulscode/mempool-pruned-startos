@@ -120,6 +120,23 @@ const electrsPruned = sdk.Dependency.optional('electrs-pruned', {
   enabled: indexerEnabled('electrs-pruned'),
 })
 
+// The second indexer that works against a pruned node. A package of its own
+// with its own version line, so the floor is its own too: 2.1.4:1 is the first
+// build that speaks Electrum protocol 1.8, which a server on the BLAKE2b chain
+// requires and Mempool offers beside 1.4. The daemon and health check ids are
+// the ones Start9's fulcrum uses (fulcrum-pruned-startos startos/main.ts).
+const fulcrumPruned = sdk.Dependency.optional('fulcrum-pruned', {
+  description: fulcrumDescription,
+  metadata: {
+    title: 'Fulcrum Pruned',
+    icon: 'https://raw.githubusercontent.com/paulscode/fulcrum-pruned/master/dep-icon.png',
+  },
+  kind: 'running',
+  versionRange: '>=2.1.4:1',
+  healthChecks: ['primary', 'sync-progress'],
+  enabled: indexerEnabled('fulcrum-pruned'),
+})
+
 const lnd = sdk.Dependency.optional('lnd', {
   description: lndDescription,
   metadata: {
@@ -182,6 +199,7 @@ export const dependencies = sdk.Dependencies.of()
   .addDependency(electrs)
   .addDependency(electrsPruned)
   .addDependency(fulcrum)
+  .addDependency(fulcrumPruned)
   .addDependency(lightningFork)
   .addDependency(cln)
   .addDependency(lnd)

@@ -20,7 +20,7 @@ const shape = z.looseObject({
     .catch(defaultBackend),
   // Absent means the choice is unmade; 'none' is the user declining an indexer.
   indexer: z
-    .enum(['electrs', 'electrs-pruned', 'fulcrum', 'none'])
+    .enum(['electrs', 'electrs-pruned', 'fulcrum', 'fulcrum-pruned', 'none'])
     .optional()
     .catch(undefined),
   torProxy: z.boolean().catch(false),

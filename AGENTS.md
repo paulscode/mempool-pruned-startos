@@ -35,6 +35,7 @@ verified, tried, and decided belongs in the commit message and the PR body.
 ## This repo
 
 - **Keep the indexer choice in `store.json`, never in `mempool-config.json`.** `ELECTRUM.HOST` is the same bridge IP whichever indexer is chosen, so it cannot carry the choice. Don't add a runtime fallback for the old `<indexer>.startos` value; the `3.3.1:16` migration seeds it once.
-- **The `electrs` and `fulcrum` host ids and the plaintext Electrum port are literals in `startos/utils.ts`**, because neither package is an npm dependency. Recheck them whenever either changes its interfaces.
+- **The indexers' host ids (`electrs`, `electrs-pruned`, `fulcrum`, `fulcrum-pruned`) and the plaintext Electrum port are literals in `startos/utils.ts`**, and their health-check ids are literals in `startos/dependencies.ts`, because none of those packages is an npm dependency. Recheck them whenever one changes its interfaces.
+- **The frontend and backend images come from the fork, `paulscode/mempool-pruned`, not from upstream.** A version bump starts there; see `UPDATING.md`.
 - **Clear the boot sentinel only once the API is healthy, and retry the clear when it fails.** A sentinel left by a good start makes the next clean restart wipe the cache; one removed too early lets an OOM boot loop run forever.
 - **Don't reuse or drop the `main` volume.** It exists only for the `3.3.1:3` migration, which cleans an old install's `start9/` directory.

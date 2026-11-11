@@ -13,12 +13,17 @@ const indexerInputSpec = InputSpec.of({
     // transaction lookups back to Bitcoin RPC, which is the exact call this
     // package exists to avoid.
     description: i18n(
-      '- Fulcrum: Fulcrum on this server answers address lookups.\n- Electrs: Electrs on this server answers address lookups.\n- Electrs Pruned: Electrs Pruned on this server answers address lookups. Use it against a pruned node: it is the only one of the three that can index blocks your node has already discarded.\n- None: address search is turned off. Against a pruned node, transaction pages break too: confirmed transactions are then looked up over Bitcoin RPC, which a pruned node cannot answer.\nThe indexer you choose must be installed and running on this server.',
+      '- Fulcrum: Fulcrum on this server answers address lookups. It needs an archival node.\n- Electrs: Electrs on this server answers address lookups. It needs an archival node.\n- Electrs Pruned: Electrs Pruned on this server answers address lookups. It works with a pruned node: it can index blocks your node has already discarded.\n- Fulcrum Pruned: Fulcrum Pruned on this server answers address lookups. It works with a pruned node in the same way.\n- None: address search is turned off. Against a pruned node, transaction pages break too: confirmed transactions are then looked up over Bitcoin RPC, which a pruned node cannot answer.\nThe indexer you choose must be installed and running on this server.',
     ),
+    // Upstream marks Fulcrum "recommended". That advice assumes the archival
+    // node upstream requires; here the node may be pruned, where Fulcrum and
+    // Electrs cannot work at all, so no option is recommended over the others
+    // and the description says which ones a pruned node needs.
     values: {
-      fulcrum: i18n('Fulcrum (recommended)'),
+      fulcrum: i18n('Fulcrum'),
       electrs: i18n('Electrs'),
       'electrs-pruned': i18n('Electrs Pruned (works with a pruned node)'),
+      'fulcrum-pruned': i18n('Fulcrum Pruned (works with a pruned node)'),
       none: i18n('None — address lookups disabled'),
     },
     // Nothing preselected, so closing the form without choosing does not read

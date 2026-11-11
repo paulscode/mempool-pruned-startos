@@ -8,7 +8,7 @@
 ## What you get on StartOS
 
 - A **Web UI** interface — the Mempool block explorer, visualizer, fee estimator, and REST/WebSocket API in one site.
-- Address lookup powered by a separate StartOS Electrum indexer (Fulcrum, Electrs, or Electrs Pruned), or left off.
+- Address lookup powered by a separate StartOS Electrum indexer (Fulcrum, Electrs, Electrs Pruned, or Fulcrum Pruned), or left off.
 - An optional **Lightning** explorer that pulls network data from a local LND or Core Lightning node.
 - A bundled MariaDB sidecar; you do not configure a database.
 - Everything needed for a first start bundled in — Mempool never has to reach the internet to come up, and does not contact GitHub at all.
@@ -18,7 +18,7 @@
 Mempool needs Bitcoin, an Electrum-style indexer, and (optionally) a Lightning node to be useful. Install dependencies before or alongside Mempool.
 
 1. Install a **Bitcoin** node if you don't have one, then run **Select Node** and pick it. Unlike upstream Mempool, this one posts no task demanding `txindex` and no pruning: your node can stay pruned.
-2. Install an indexer: **Fulcrum**, **Electrs**, or **Electrs Pruned**. Against a pruned node, use **Electrs Pruned** — it is the only one of the three that can index blocks your node has already discarded.
+2. Install an indexer: **Fulcrum**, **Electrs**, **Electrs Pruned**, or **Fulcrum Pruned**. Against a pruned node, use **Electrs Pruned** or **Fulcrum Pruned** — they are the two that can index blocks your node has already discarded. Fulcrum and Electrs need an archival node.
 3. After installing Mempool, run the **Select Indexer** task that appears for Mempool and pick one, or pick **None**. Nothing is picked for you, and Mempool will not start until you answer. **Do not pick None if your node is pruned.** Without an indexer, Mempool looks confirmed transactions up over Bitcoin RPC instead, which a pruned node cannot answer, so transaction pages break as well as address search.
 4. Optionally install **LND** or **Core Lightning**, then run **Enable Lightning** and pick the backend you want feeding the Lightning tab.
 5. Start Mempool. It will wait until Bitcoin, the selected indexer, and (if enabled) the Lightning backend are healthy and synced.
@@ -31,7 +31,8 @@ Open the **Web UI** interface to reach Mempool. The home page shows the live mem
 
 ### Actions
 
-- **Select Indexer** — choose the Electrum backend: Fulcrum, Electrs, Electrs Pruned, or None. Mempool's dependency set updates accordingly, and None leaves address lookups off.
+- **Select Node** — choose which Bitcoin service the explorer reads: Bitcoin Knots (also Bitcoin Core, which shares its service), the Bitcoin Knots (SHA256) Companion, or the Bitcoin Knots (BLAKE2b) Companion. Switching can move the explorer to a different chain; run **Clear Backend Cache** afterwards.
+- **Select Indexer** — choose the Electrum backend: Fulcrum, Electrs, Electrs Pruned, Fulcrum Pruned, or None. Mempool's dependency set updates accordingly, and None leaves address lookups off.
 - **Enable Lightning** — choose LND, Lightning Fork (BLAKE2b), Core Lightning, or none for the Lightning tab's data source. Lightning Fork cannot be chosen while Select Node is on the SHA256 Companion. The selected node is mounted read-only. On a low-memory box the form carries a warning: the Lightning network sync is memory-hungry, and turning it on alongside Bitcoin and your indexer can tip such a box into out-of-memory crashes. You can still proceed.
 - **Indexing and Performance** — tune backend behavior on a single form:
   - **Performance Profile** — pick **Low-CPU** (default; polls bitcoind every 8s, projects 4 future blocks), **Balanced** (4s / 6 blocks), or **Responsive** (2s / 8 blocks; highest CPU). The Mempool backend rebuilds its block projection on every poll, so this is the main lever for CPU usage on low-power devices.
@@ -59,6 +60,6 @@ StartOS backs up your Mempool **configuration** — your indexer, Lightning, and
 
 - **Mainnet only.** Testnet, testnet4, signet, regtest, and Liquid are not available.
 - **Electrum backend only.** The Esplora backend is not used.
-- **One indexer and one Lightning node at a time.** You cannot run Fulcrum and Electrs, or LND and CLN, simultaneously against Mempool.
+- **One indexer and one Lightning node at a time.** You cannot run two indexers, or LND and CLN, simultaneously against Mempool.
 - **No paid acceleration, no MaxMind GeoIP, no Redis, no Stratum, no replication** — these upstream features are deliberately disabled.
 - **Memory.** Mempool runs alongside Bitcoin, an Electrum indexer, and (optionally) a Lightning node, all memory-hungry. The backend's V8 heap ceiling scales with the RAM available to it (a 16 GB box gets ~2.9 GB, more on larger machines) so it has room to reload its cache at startup without a "JavaScript heap out of memory" crash; if the cache is ever too large to reload even so, the backend drops it and rebuilds from live data rather than looping. 16 GB or more is recommended, especially for Lightning or indexing — on an 8 GB box the stack is tight and enabling heavy extras can still trigger out-of-memory crashes.

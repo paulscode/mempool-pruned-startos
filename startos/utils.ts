@@ -146,19 +146,28 @@ export const torSocksBridge = (effects: T.Effects) =>
     })
     .const()
 
-export type Indexer = 'electrs' | 'electrs-pruned' | 'fulcrum'
+export type Indexer =
+  | 'electrs'
+  | 'electrs-pruned'
+  | 'fulcrum'
+  | 'fulcrum-pruned'
 export type IndexerChoice = Indexer | 'none'
 
-// electrs and fulcrum are optional dependencies Mempool does not depend on at
-// the npm level, so their host ids are string literals rather than imported
-// constants. Both bind the plaintext Electrum port 50001; electrs groups it
-// under host `electrum`, fulcrum under host `main`.
+// The indexers are optional dependencies Mempool does not depend on at the npm
+// level, so their host ids are string literals rather than imported constants.
+// All of them bind the plaintext Electrum port 50001; the electrs packages
+// group it under host `electrum`, the fulcrum packages under host `main`.
 const INDEXER_HOSTS: Record<Indexer, { packageId: string; hostId: string }> = {
   electrs: { packageId: 'electrs', hostId: 'electrum' },
-  // A fork of the electrs package, so the same host id, and the only indexer
-  // here that can serve a pruned node.
+  // A fork of the electrs package, so the same host id. One of the two
+  // indexers here that can serve a pruned node.
   'electrs-pruned': { packageId: 'electrs-pruned', hostId: 'electrum' },
   fulcrum: { packageId: 'fulcrum', hostId: 'main' },
+  // The other one. Its own package, not a flavor of `fulcrum`, but it keeps
+  // that package's host id (fulcrum-pruned-startos startos/utils.ts,
+  // `mainHostId`) and binds the plaintext port with `secure: null`, so it is
+  // reachable over the bridge the same way.
+  'fulcrum-pruned': { packageId: 'fulcrum-pruned', hostId: 'main' },
 }
 const electrumPort = 50001
 
