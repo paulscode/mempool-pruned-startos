@@ -13,6 +13,8 @@ import { LangDict } from './default'
 // "(recommended)", 90 is this fork's label and stays English like 77, and 91
 // is 84 with a line for Fulcrum Pruned and the archival-node notes; its shared
 // lines are 84's translations.
+//
+// 92 came with the bound on health checks (startos/boundedCheck.ts).
 
 export default {
   es_ES: {
@@ -103,6 +105,7 @@ export default {
     89: 'Fulcrum',
     90: 'Fulcrum Pruned (works with a pruned node)',
     91: '- Fulcrum: Fulcrum, en este servidor, responde a las búsquedas de direcciones. Necesita un nodo de archivo.\n- Electrs: Electrs, en este servidor, responde a las búsquedas de direcciones. Necesita un nodo de archivo.\n- Electrs Pruned: Electrs Pruned, en este servidor, responde a las búsquedas de direcciones. Funciona con un nodo podado: puede indexar bloques que su nodo ya ha descartado.\n- Fulcrum Pruned: Fulcrum Pruned, en este servidor, responde a las búsquedas de direcciones. Funciona con un nodo podado de la misma manera.\n- Ninguno: la búsqueda de direcciones queda desactivada. Con un nodo podado también fallan las páginas de transacciones: las transacciones confirmadas se consultan entonces por RPC de Bitcoin, algo que un nodo podado no puede responder.\nEl indexador que elija debe estar instalado y en ejecución en este servidor.',
+    92: 'Esta comprobación no ha terminado tras un minuto',
   },
   de_DE: {
     0: 'Mempool wird gestartet',
@@ -192,6 +195,7 @@ export default {
     89: 'Fulcrum',
     90: 'Fulcrum Pruned (works with a pruned node)',
     91: '- Fulcrum: Fulcrum auf diesem Server beantwortet Adressabfragen. Es benötigt einen Archivknoten.\n- Electrs: Electrs auf diesem Server beantwortet Adressabfragen. Es benötigt einen Archivknoten.\n- Electrs Pruned: Electrs Pruned auf diesem Server beantwortet Adressabfragen. Es funktioniert mit einem beschnittenen Knoten: Es kann Blöcke indexieren, die Ihr Knoten bereits verworfen hat.\n- Fulcrum Pruned: Fulcrum Pruned auf diesem Server beantwortet Adressabfragen. Es funktioniert auf dieselbe Weise mit einem beschnittenen Knoten.\n- Keiner: Die Adresssuche ist abgeschaltet. Bei einem beschnittenen Knoten fallen auch die Transaktionsseiten aus: Bestätigte Transaktionen werden dann über Bitcoin-RPC abgefragt, was ein beschnittener Knoten nicht beantworten kann.\nDer gewählte Indexer muss auf diesem Server installiert sein und laufen.',
+    92: 'Diese Prüfung ist nach einer Minute noch nicht abgeschlossen',
   },
   pl_PL: {
     0: 'Uruchamianie Mempool',
@@ -281,6 +285,7 @@ export default {
     89: 'Fulcrum',
     90: 'Fulcrum Pruned (works with a pruned node)',
     91: '- Fulcrum: wyszukiwanie adresów obsługuje Fulcrum na tym serwerze. Wymaga węzła archiwalnego.\n- Electrs: wyszukiwanie adresów obsługuje Electrs na tym serwerze. Wymaga węzła archiwalnego.\n- Electrs Pruned: wyszukiwanie adresów obsługuje Electrs Pruned na tym serwerze. Działa z przyciętym węzłem: potrafi indeksować bloki, które Twój węzeł już odrzucił.\n- Fulcrum Pruned: wyszukiwanie adresów obsługuje Fulcrum Pruned na tym serwerze. Działa z przyciętym węzłem w ten sam sposób.\n- Brak: wyszukiwanie adresów jest wyłączone. Przy przyciętym węźle przestają działać także strony transakcji: potwierdzone transakcje są wtedy pobierane przez RPC Bitcoina, na co przycięty węzeł nie odpowie.\nWybrany indekser musi być zainstalowany i uruchomiony na tym serwerze.',
+    92: 'To sprawdzenie nie zakończyło się po minucie',
   },
   fr_FR: {
     0: 'Démarrage de Mempool',
@@ -370,5 +375,6 @@ export default {
     89: 'Fulcrum',
     90: 'Fulcrum Pruned (works with a pruned node)',
     91: "- Fulcrum : Fulcrum, sur ce serveur, répond aux recherches d'adresses. Il nécessite un nœud d'archive.\n- Electrs : Electrs, sur ce serveur, répond aux recherches d'adresses. Il nécessite un nœud d'archive.\n- Electrs Pruned : Electrs Pruned, sur ce serveur, répond aux recherches d'adresses. Il fonctionne avec un nœud élagué : il peut indexer les blocs que votre nœud a déjà supprimés.\n- Fulcrum Pruned : Fulcrum Pruned, sur ce serveur, répond aux recherches d'adresses. Il fonctionne de la même manière avec un nœud élagué.\n- Aucun : la recherche d'adresses est désactivée. Avec un nœud élagué, les pages de transactions cessent aussi de fonctionner : les transactions confirmées sont alors récupérées via le RPC Bitcoin, ce qu'un nœud élagué ne peut pas fournir.\nL'indexeur choisi doit être installé et en cours d'exécution sur ce serveur.",
+    92: "Cette vérification n'est pas terminée après une minute",
   },
 } satisfies Record<string, LangDict>

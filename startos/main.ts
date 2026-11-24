@@ -6,6 +6,7 @@ import { manifest as lndManifest } from 'lnd-startos/startos/manifest'
 import { configJson } from './fileModels/mempool-config.json'
 import { storeJson } from './fileModels/store.json'
 import { defaultBackend } from './backends'
+import { bounded, unanswered } from './boundedCheck'
 import { i18n } from './i18n'
 import { FileHelper } from '@start9labs/start-sdk'
 import { sdk } from './sdk'
@@ -294,7 +295,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
       ready: {
         gracePeriod: 120_000,
         display: null,
-        fn: async () => {
+        fn: bounded(async () => {
           const res = await mariaSub.exec([
             'healthcheck.sh',
             '--connect',
@@ -311,7 +312,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
             result: 'success',
             message: null,
           }
-        },
+        }, unanswered),
       },
       requires: [],
     })
@@ -323,14 +324,14 @@ export const main = sdk.setupMain(async ({ effects }) => {
       },
       ready: {
         display: null,
-        fn: async () => {
+        fn: bounded(async () => {
           const { result } = await sdk.healthCheck.checkPortListening(
             effects,
             poolsPort,
             { successMessage: '', errorMessage: '' },
           )
           return { result, message: null }
-        },
+        }, unanswered),
       },
       requires: [],
     })
@@ -346,7 +347,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
       ready: {
         gracePeriod: 45_000,
         display: i18n('API'),
-        fn: async () => {
+        fn: bounded(async () => {
           const res = await sdk.healthCheck.checkPortListening(
             effects,
             apiPort,
@@ -369,7 +370,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
             if (!rm || rm.exitCode !== 0) bootSentinelCleared = false
           }
           return res
-        },
+        }, unanswered),
       },
       requires: ['mariadb', 'pools'],
     })
@@ -392,11 +393,14 @@ export const main = sdk.setupMain(async ({ effects }) => {
       },
       ready: {
         display: i18n('Web Interface'),
-        fn: () =>
-          sdk.healthCheck.checkPortListening(effects, uiPort, {
-            successMessage: i18n('The web interface is ready'),
-            errorMessage: i18n('The web interface is not ready'),
-          }),
+        fn: bounded(
+          () =>
+            sdk.healthCheck.checkPortListening(effects, uiPort, {
+              successMessage: i18n('The web interface is ready'),
+              errorMessage: i18n('The web interface is not ready'),
+            }),
+          unanswered,
+        ),
       },
       // The frontend reverse-proxies the API/websocket to the backend and is
       // non-functional without it. Gating on 'api' makes the 'webui' health a

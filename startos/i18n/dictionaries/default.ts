@@ -88,6 +88,7 @@ const dict = {
   Fulcrum: 89,
   'Fulcrum Pruned (works with a pruned node)': 90,
   '- Fulcrum: Fulcrum on this server answers address lookups. It needs an archival node.\n- Electrs: Electrs on this server answers address lookups. It needs an archival node.\n- Electrs Pruned: Electrs Pruned on this server answers address lookups. It works with a pruned node: it can index blocks your node has already discarded.\n- Fulcrum Pruned: Fulcrum Pruned on this server answers address lookups. It works with a pruned node in the same way.\n- None: address search is turned off. Against a pruned node, transaction pages break too: confirmed transactions are then looked up over Bitcoin RPC, which a pruned node cannot answer.\nThe indexer you choose must be installed and running on this server.': 91,
+  'This check has not finished after a minute': 92,
 } as const
 
 export type I18nKey = keyof typeof dict

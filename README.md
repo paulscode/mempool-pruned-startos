@@ -241,6 +241,8 @@ Four checks, one per daemon, and their ordering carries meaning.
 
 The database check reports `starting` while it initialises and retries every second until it is ready. It is not displayed, because a user has nothing to do about it.
 
+**Every one of those checks goes through `startos/boundedCheck.ts`** (since 3.3.2:3). start-sdk awaits a check's run with no limit, and a stop waits for each daemon's check to end before it signals that daemon, dependents first, so one run that never returned (a subcontainer `exec` waiting on its mounts, as the `mariadb` check and the `api` check's sentinel removal do) would hold up Stop, updates and restarts, as it did in Bitcoin Knots (BLAKE2b) Companion before 29.5.0:1. A run still pending after a minute is left behind: the check repeats its last result twice, then reads _This check has not finished after a minute_ (`starting`, never `failure`). No second run starts while one is pending, and a run that finishes late is the next call's answer. A healthy run takes well under a second; the slowest legitimate one is a `SubContainer.exec` at its own 30 s timeout.
+
 **`webui` is gated on `api`**, which makes it a truthful "Mempool is usable" signal rather than a report that a web server is running: the frontend proxies everything to the backend and is useless without it. StartOS holds the frontend while the API is unhealthy and brings it back when the API recovers, and dependent packages rely on that.
 
 An `api` failure after the grace period is most often the backend unable to reach Bitcoin, the indexer, or its own database — the service log names which. Failing repeatedly with a heap out-of-memory message while loading the cache is the case [Clear Backend Cache](#actions) exists for.
